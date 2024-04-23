@@ -1,0 +1,128 @@
+* {
+  font-family: "Pretendard";
+  color: var(--text-color);
+  margin: 0;
+  padding: 0;
+}
+
+/* a 태그 이동시 스크롤 부드럽게 이동하기 */
+html {
+  scroll-behavior: smooth;
+}
+
+/* 스크롤바 */
+* {
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--main2-color);
+    border-radius: 10px;
+    max-height: 30px;
+    border: 1px solid var(--back-color);
+    box-sizing: border-box;
+  }
+  ::-webkit-scrollbar-track {
+    background-color: var(--back-color);
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+}
+
+/* button */
+button {
+  font-family: "PretendardSemiBold";
+  box-sizing: border-box;
+}
+
+/* input */
+input {
+  font-family: "Pretendard";
+  font-size: 16px;
+  height: 40px;
+  box-sizing: border-box;
+  color: var(--text-color);
+  border: 1px solid var(--main2-color);
+  border-radius: 10px;
+  padding-left: 20px;
+}
+input::placeholder {
+  font-family: "Pretendard";
+  font-size: 14px;
+  color: var(--placeholder-color);
+}
+input:focus {
+  border: 1px solid var(--main-color);
+  outline: none;
+}
+input:target {
+  outline: none;
+}
+
+h1 {
+  font-family: "PretendardExtraBold";
+}
+h2,
+h3,
+h4,
+h5 {
+  font-family: "PretendardSemiBold";
+}
+.swal2-title {
+  color: var(--text-color) !important;
+  padding-top: 20px;
+}
+
+.swal2-confirm {
+  font-family: "PretendardSemiBold";
+  color: var(--white-color);
+  border: none;
+  width: 100px;
+  border-radius: 10px;
+  padding: 16px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--main2-color);
+  transition: background-color;
+}
+
+/* 버튼 호버 상태 */
+.swal2-confirm:hover {
+  background-color: var(--main-color);
+  transition-duration: 0.2s;
+}
+.my-swal-button {
+  background-color: var(--main2-color) !important;
+  width: 100px !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 4px !important;
+  padding: 10px 24px !important;
+  margin-right: 10px !important;
+  font-size: 16px !important;
+}
+.my-swal-button:hover {
+  background-color: var(--main-color) !important;
+  transition-duration: 0.2s !important;
+}
+.my-swal-icon {
+  color: var(--main-color) !important;
+}
+/* 공통 color class */
+:root {
+  --main-color: #ff5b84;
+  --main2-color: #ffa5bb;
+  --back-color: #fff4f7;
+  --backgray-color: #f1f1f1;
+  --sub-color: #abdce0;
+  --text-color: #6a4a52;
+  --subtext-color: #9b9090;
+  --placeholder-color: #c0b7b7;
+  --white-color: #fff;
+}
+/* 공통 그림자 */
+:root {
+  --box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+  --darker-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
+}
