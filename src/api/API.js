@@ -1,5 +1,5 @@
-// import URL from "/src/api/API";
-export const URL = `http://http://kdt-sw-8-team07.elicecoding.com:3000`;
+//import URL from "/src/api/API";
+export const URL = `http://localhost:3000`;
 
 export function useAPI() {
   const request = async (url, method = "GET", params = undefined) => {
@@ -19,7 +19,8 @@ export function useAPI() {
       const response = await fetch(`${URL}${url}`, options);
 
       if (!response.ok) {
-        throw new Error(data.message || "네트워크 응답이 올바르지 않습니다.");
+        const errorData = await response.json(); // 에러 응답 데이터 읽기
+        throw new Error(errorData.message || "네트워크 응답이 올바르지 않습니다.");
       }
 
       const data = await response.json();
