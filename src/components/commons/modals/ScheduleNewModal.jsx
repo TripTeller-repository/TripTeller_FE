@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import KakaoMapModal from "/src/components/commons/modals/KakaoMapModal";
-import dayjs from 'dayjs'; // Day.js 라이브러리입니다.
+import dayjs from 'dayjs'; // Day.js 라이브러리123
 import { URL } from "/src/api/API";
 
 const ModalOverlay = styled.div`
