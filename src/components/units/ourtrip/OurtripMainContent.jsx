@@ -41,48 +41,49 @@ const FeedCardContainer = styled.div`
   width: 1200px;
 `;
 
-// const TabButtonContainer = styled.div`
-//   display: flex;
-//   height: 36px;
-//   justify-content: space-between;
-//   // width: 1200px;
+const TabButtonContainer = styled.div`
+  display: flex;
+  height: 36px;
+  justify-content: space-between;
+  // width: 1200px;
 
-//   & > button:first-child {
-//     border-right: none;
-//     border-radius: 5px 0 0 5px;
-//   }
-//   & > button:last-child {
-//     border-radius: 0 5px 5px 0;
-//   }
-// `;
+  & > button:first-child {
+    border-right: none;
+    border-radius: 5px 0 0 5px;
+  }
+  & > button:last-child {
+    border-radius: 0 5px 5px 0;
+  }
+`;
 
-// const ToggleButton = styled.button`
-//   width: 80px;
-//   background-color: var(--back-color);
-//   border: 1px solid var(--main2-color);
-//   font-size: 14px;
-//   cursor: pointer;
-//   padding: 5px 10px;
-//   font-family: "PretendardSemiBold";
-//   margin-left: auto;
-//   width: 120px;
+const ToggleButton = styled.button`
+  width: 80px;
+  background-color: var(--back-color);
+  border: 1px solid var(--main2-color);
+  font-size: 14px;
+  cursor: pointer;
+  padding: 5px 10px;
+  font-family: "PretendardSemiBold";
+  margin-left: auto;
+  width: 120px;
 
-//   &:hover {
-//     background-color: var(--main2-color);
-//     transition-duration: 0.2s;
-//     color: white;
-//   }
-// `;
+  &:hover {
+    background-color: var(--main2-color);
+    transition-duration: 0.2s;
+    color: white;
+  }
+`;
 
 const OurTripMainContent = () => {
   const { request } = useAPI();
   const [ourTripData, setOurTripData] = useState([]);
-  // const [sortBy, setSortBy] = useState("latest"); // 초기값 설정
+  const [sortBy, setSortBy] = useState("latest"); // 초기값 설정
 
   useEffect(() => {
     const fetchData = async () => {
       const response = await request(`/feeds`);
-      const data = response.data;
+      const data = response.data.feeds.data;
+      console.log(data);
       setOurTripData(data);
     };
     fetchData();
@@ -94,7 +95,7 @@ const OurTripMainContent = () => {
       <Container>
         <HorizontalContainer>
           <Title>여행 족보</Title>
-          {/* <TabButtonContainer>
+          <TabButtonContainer>
             <ToggleButton
               $isActive={sortBy === "latest"}
               onClick={() => setSortBy("latest")}
@@ -107,7 +108,7 @@ const OurTripMainContent = () => {
             >
               인기순
             </ToggleButton>
-          </TabButtonContainer> */}
+          </TabButtonContainer>
         </HorizontalContainer>
         <FeedCardContainer>
           {ourTripData.map((feed) => (
