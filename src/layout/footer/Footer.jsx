@@ -40,9 +40,9 @@ const CopyRightText = styled.div`
 
 const FooterIcons = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: flex-end;
-  gap: 8px;
+  gap: 28px;
 `;
 
 const StyledIcon = styled.img`
@@ -66,7 +66,7 @@ function Footer() {
           </CopyRightText>
         </FooterInfo>
         <FooterIcons>
-          <Link to="/">
+          <Link to="https://github.com/TripTeller-repository">
             <StyledIcon src={GitIcon} alt="깃허브로 이동" />
           </Link>
           <Link to="https://youtu.be/IOLBQCbE9PY?feature=shared">

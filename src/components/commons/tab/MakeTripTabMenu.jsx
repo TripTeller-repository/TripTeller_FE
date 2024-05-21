@@ -16,19 +16,24 @@ const TabButtonContainer = styled.div`
   align-items: center; // 세로축 중앙 정렬
   width: 363px;
   height: 36px;
-  margin-bottom: 12px;
+  margin-top: 24px;
+  margin-bottom: 24px;
 `;
 
 const TabItem = styled.div`
-  height: 36px; // 높이는 디자인에 맞게 조정
+  height: 24px; // 높이는 디자인에 맞게 조정
   display: flex;
   align-items: center;
   font-family: "PretendardSemiBold";
   cursor: pointer;
+  font-size: 20px;
+  margin-bottom: 0;
+  padding-left: 24px;
+  padding-right: 24px;
 
   &:not(:last-child) {
     // 마지막 TabItem을 제외한 모든 TabItem
-    margin-right: 50px; // 오른쪽 마진 적용
+    border-right: 2px solid var(--main2-color);
   }
   color: ${(props) => (props.$isActive ? "var(--main-color)" : "inherit")};
 `;

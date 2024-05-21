@@ -5,7 +5,7 @@ import DeleteBudgetModal from "/src/components/commons/modals/DeleteBudgetModal"
 import dayjs from "dayjs";
 
 const SectionContainer = styled.div`
-  width: 960px;
+  width: 880px;
   margin-bottom: 60px;
   margin-left: 60px;
 `;
@@ -51,14 +51,16 @@ const ExpenseInfo = styled.div`
 
 const ExpenseText = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  align-items: center;
   font-family: "PretendardSemiBold";
-  font-size: 16px;
+  font-size: 18px;
   margin-left: 20px;
   gap: 16px;
   padding: 0px;
 
   p {
+    margin-left: 48px;
     font-size: 14px;
   }
 `;
@@ -85,7 +87,7 @@ const ActionsContainer = styled.button`
 `;
 
 const AddExpenseContainer = styled.div`
-  width: 950px;
+  width: 100%;
   display: flex;
   justify-content: center;
   padding: 40px 0;

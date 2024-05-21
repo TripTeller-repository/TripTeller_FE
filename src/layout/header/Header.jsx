@@ -48,15 +48,6 @@ const HeaderIcon = styled.div`
   justify-content: space-between;
   align-items: flex-start;
 `;
-const StyledIcon = styled.img`
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  object-fit: cover;
-  cursor: pointer;
-  margin-left: 20px;
-  margin-right: 20px;
-`;
 
 const LinkButton = styled.button`
   background: none;

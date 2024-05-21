@@ -118,7 +118,7 @@ const CategoryComment = styled.p`
 const BudgetModal = ({ expense, dailyPlanId ,onClose, onUpdate }) => {
   const isEditMode = Boolean(expense);
   const [selectedCategory, setSelectedCategory] = useState(
-    expense ? expense.expenseCategory : "food",
+    expense ? expense.expenseCategory : "",
   );
   const [title, setTitle] = useState(expense ? expense.title : "");
   const [memo, setMemo] = useState(expense ? expense.expenseMemo : "");
@@ -274,7 +274,7 @@ const BudgetModal = ({ expense, dailyPlanId ,onClose, onUpdate }) => {
             <p>관광</p>
           </CategoryItem>
         </CategoryContainer>
-        <CategoryComment>카테고리를 선택하세요.</CategoryComment>
+        <CategoryComment> {selectedCategory === "" && "카테고리를 선택하세요."} </CategoryComment>
 
         <InputContainer>
           <label>
