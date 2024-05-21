@@ -212,12 +212,12 @@ const NewTripMakeModal = ({ closeModal }) => {
             value={region}
             onChange={(e) => setRegion(e.target.value)}
           >
-            <option value="">지역을 선택해주세요.</option>
+            <option value="" selected>지역을 선택해주세요.</option>
             <option value="Seoul">서울특별시</option>
-            <option value="GyeonggiIncheon">경기 & 인천</option>
-            <option value="ChungcheongDaejeon">충청 & 대전</option>
-            <option value="GyeongsangDaeguUlsan">경상 & 대구 & 울산</option>
-            <option value="JeollaGwangju">전라 & 광주</option>
+            <option value="GyeonggiIncheon">경기 / 인천</option>
+            <option value="ChungcheongDaejeon">충청 / 대전</option>
+            <option value="GyeongsangDaeguUlsan">경상 / 대구 / 울산</option>
+            <option value="JeollaGwangju">전라 / 광주</option>
             <option value="Gangwon">강원</option>
             <option value="Busan">부산</option>
             <option value="Jeju">제주</option>
