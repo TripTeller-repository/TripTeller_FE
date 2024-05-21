@@ -58,7 +58,8 @@ const TabButtonContainer = styled.div`
 
 const ToggleButton = styled.button`
   width: 80px;
-  background-color: var(--back-color);
+  background-color: ${({ $active }) =>
+    $active ? "var(--main2-color)" : "var(--back-color)"};
   border: 1px solid var(--main2-color);
   font-size: 14px;
   cursor: pointer;
@@ -66,11 +67,15 @@ const ToggleButton = styled.button`
   font-family: "PretendardSemiBold";
   margin-left: auto;
   width: 120px;
+  transition-duration: 0.2s;
 
   &:hover {
-    background-color: var(--main2-color);
-    transition-duration: 0.2s;
-    color: white;
+    color: var(--main-color);
+  }
+
+  &:active {
+    background-color: var(--main-color);
+    color: var(--white-color);
   }
 `;
 
@@ -78,16 +83,18 @@ const OurTripMainContent = () => {
   const { request } = useAPI();
   const [ourTripData, setOurTripData] = useState([]);
   const [sortBy, setSortBy] = useState("latest"); // 초기값 설정
+  const [activeButton, setActiveButton] = useState(null); // 필터 버튼 상태표시
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await request(`/feeds`);
-      const data = response.data.feeds.data;
-      console.log(data);
+      const response = await request(
+        `/feeds/order/` + (sortBy === "popular" ? "byLikeCount" : "byRecent"),
+      );
+      const data = response.data;
       setOurTripData(data);
     };
     fetchData();
-  }, []);
+  }, [sortBy]);
 
   return (
     <>
@@ -95,20 +102,30 @@ const OurTripMainContent = () => {
       <Container>
         <HorizontalContainer>
           <Title>여행 족보</Title>
-          <TabButtonContainer>
-            <ToggleButton
-              $isActive={sortBy === "latest"}
-              onClick={() => setSortBy("latest")}
-            >
-              최신순
-            </ToggleButton>
-            <ToggleButton
-              $isActive={sortBy === "popular"}
-              onClick={() => setSortBy("popular")}
-            >
-              인기순
-            </ToggleButton>
-          </TabButtonContainer>
+          {
+            <TabButtonContainer>
+              <ToggleButton
+                $isActive={sortBy === "latest"}
+                onClick={() => {
+                  setSortBy("latest");
+                  setActiveButton("latest");
+                }}
+                $active={activeButton === "latest"}
+              >
+                최신순
+              </ToggleButton>
+              <ToggleButton
+                $isActive={sortBy === "popular"}
+                onClick={() => {
+                  setSortBy("popular");
+                  setActiveButton("popular");
+                }}
+                $active={activeButton === "popular"}
+              >
+                인기순
+              </ToggleButton>
+            </TabButtonContainer>
+          }
         </HorizontalContainer>
         <FeedCardContainer>
           {ourTripData.map((feed) => (

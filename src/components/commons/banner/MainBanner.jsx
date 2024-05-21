@@ -7,9 +7,11 @@ const BannerContainer = styled.div`
   position: relative;
   margin-bottom: 30px;
   background-position: center;
-  bacground-size: cover;
+  background-size: cover;
   background-image: ${(props) => `url(${props.$imageurl})`};
   background-color: ${(props) => props.$backgroundColor};
+  transition: background-position 0.5s ease-in-out; /* 배경 이미지의 위치 변화에 대한 부드러운 전환 */
+  overflow: hidden; /* 이미지가 부드럽게 넘어갈 수 있도록 overflow: hidden 추가 */
 `;
 
 const BannerText1 = styled.div`
@@ -20,7 +22,6 @@ const BannerText1 = styled.div`
   opacity: 0;
   animation: fadeIn 0.5s ease-in-out 0.3s forwards;
   margin-top: 120px;
-
   text-shadow: (--box-shadow);
 
   @keyframes fadeIn {
@@ -130,19 +131,19 @@ function MainBanner() {
 
   const slideImages = [
     "/img/banner04.jpg",
-    "/img/mainbanner.gif",
-    "/img/banner02.jpg", //2,3번째 슬라이드에는 이미지 안 넣음
+    "/img/banner01.jpeg",
+    "/img/banner02.jpg", 
   ];
 
   const slideBackgroundColors = [
-    "", // 첫 번째 슬라이드 배경색
+    "", 
     "",
     "",
   ];
 
   const handlePrevSlide = () => {
     setCurrentSlide((prevSlide) =>
-      prevSlide === 0 ? slideImages.length - 1 : prevSlide - 1,
+      prevSlide === 0 ? slideImages.length - 1 : prevSlide - 1
     );
   };
 
@@ -155,24 +156,21 @@ function MainBanner() {
       $imageurl={slideImages[currentSlide]}
       $backgroundColor={slideBackgroundColors[currentSlide]}
     >
-      <BannerText1
-        style={{ color: currentSlide === 1 ? "var(--main-color)" : "white" }}
-      >
-        여행의 시작과 끝, 모든 순간을 함께
-        <br />
-      </BannerText1>
-      <BannerText2
-        style={{ color: currentSlide === 1 ? "var(--main-color)" : "white" }}
-      >
-        TripTeller
-      </BannerText2>
+     <BannerText1 style={{ color: "white" }}>
+    여행의 시작과 끝, 모든 순간을 함께
+    <br />
+  </BannerText1>
+  <BannerText2 style={{ color: "white" }}>
+  TripTeller
+  </BannerText2>
+
       <IconContainerWrapper>
         <IconContainer>
-          <BackwardIcon src="./icon/arrow_back.svg" onClick={handlePrevSlide} />
-          <ForwardIcon
-            src="./icon/arrow_forward.svg"
-            onClick={handleNextSlide}
+          <BackwardIcon
+            src="./icon/arrow_back.svg"
+            onClick={handlePrevSlide}
           />
+          <ForwardIcon src="./icon/arrow_forward.svg" onClick={handleNextSlide} />
         </IconContainer>
       </IconContainerWrapper>
       <PageIndicator>
