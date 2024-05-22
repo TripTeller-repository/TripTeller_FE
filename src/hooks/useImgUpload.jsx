@@ -2,8 +2,6 @@ import { useState } from "react";
 import Resizer from "react-image-file-resizer";
 import { useAPI } from "/src/api/API";
 
-
-
 function useImgUpload() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);

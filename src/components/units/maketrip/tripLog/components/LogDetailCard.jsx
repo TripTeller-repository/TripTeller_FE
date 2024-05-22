@@ -17,13 +17,19 @@ const Title = styled.div`
     display: flex;
     align-items: flex-end;
     color: var(--main-color);
+    margin-bottom: 6px;
+    font-size: 18px;
   }
   span {
     font-family: PretendardSemiBold;
     font-size: 12px;
-    margin-left: 6px;
     margin-bottom: 1px;
   }
+`;
+const TitleText = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
 `;
 
 const Contents = styled.div`
@@ -75,6 +81,7 @@ const TextContainerTitle = styled.div`
 const P = styled.p`
   width: auto;
   background-color: var(--back-color);
+  font-size: 14px;
 `;
 const SaveButton = styled.button`
   display: ${(props) => (props.$show ? "inline-block" : "none")};
@@ -180,10 +187,10 @@ const LogDetailCard = ({
     <li id={id}>
       <Title>
         <img src="/icon/location.svg" />
-        <h4>
-          {location}
-          <span>{memo}</span>
-        </h4>
+        <TitleText>
+        <h4>{memo}</h4>
+        <span>{location}</span>
+        </TitleText>
       </Title>
       <Contents>
         <Card>
