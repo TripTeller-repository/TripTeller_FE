@@ -55,7 +55,7 @@ const AmPmButton = styled.button`
   border: none;
   border-radius: 4px;
   width: 85px;
-  height: 40px;
+  height: 45px;
   cursor: pointer;
   &:focus {
     outline: none;
@@ -107,7 +107,7 @@ const TimeSelecContainer = styled.div`
 // 장소 검색 버튼
 const SearchButton = styled.button`
   width: 125px;
-  height: 60px;
+  height: 50px;
   padding: 10px;
   margin-left: 10px; // 입력 필드와 버튼 사이의 간격
   background-color: var(--main2-color);
@@ -125,7 +125,7 @@ const SearchButton = styled.button`
 // 장소 검색 -> 입력값 받는 곳
 const InputField = styled.input`
   width: 265px;
-  height: 60px;
+  height: 50px;
   padding: 10px;
   border: 1px solid var(--main-color);
   border-radius: 4px;
@@ -135,7 +135,7 @@ const InputField = styled.input`
 // 메모란
 const InputMemo = styled.input`
   width: 400px;
-  height: 60px;
+  height: 50px;
   padding: 10px;
   border: 1px solid var(--main-color);
   border-radius: 4px;
@@ -158,7 +158,7 @@ const SubmitButton = styled.button`
 
 const TimeSelector = styled.select`
   width: 85px;
-  height: 40px;
+  height: 45px;
   border: 1px solid var(--main-color);
   border-radius: 4px;
 `;

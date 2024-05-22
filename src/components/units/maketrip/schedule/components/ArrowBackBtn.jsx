@@ -11,6 +11,7 @@ const IconContainer = styled.div`
 const BackwardIcon = styled.img`
   width: 32px;
   height: 32px;
+  cursor: pointer;
 
   &:hover {
     // 화살표 아이콘 호버시 색 변경
