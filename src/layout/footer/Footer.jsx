@@ -56,6 +56,8 @@ const StyledLogo = styled.img`
 `;
 
 const TopButton = styled.img`
+  width: 50px;
+  height: 50px;
   position: fixed;
   bottom: 200px;
   right: 80px;
