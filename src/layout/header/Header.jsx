@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "/img/logo.gif";
@@ -15,7 +15,6 @@ const HeaderContainer = styled.div`
   border-bottom: 1px solid var(--main2-color);
   position: sticky;
   z-index: 1000;
-
   top: 0px;
 `;
 
@@ -32,7 +31,6 @@ const ButtonContainer = styled.div`
   justify-content: space-between;
   align-items: center;
   width: auto;
-
   :hover {
     background-color: var(--back-color);
   }
@@ -43,6 +41,7 @@ const StyledLogo = styled.img`
   height: auto;
   margin-right: auto;
 `;
+
 const HeaderIcon = styled.div`
   display: flex;
   justify-content: space-between;
@@ -60,17 +59,25 @@ const LinkButton = styled.button`
 
 function Header() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalPosition, setModalPosition] = useState({ top: 0, left: 0 });
   const navigate = useNavigate();
+  const userProfileIconRef = useRef(null);
 
-  //토큰이 있는지 확인하고 모달창을 띄우거나 로그인 페이지로 이동
-  const openModal = () => {
+  const toggleModal = () => {
     const token = localStorage.getItem("accessToken");
     if (token) {
-      setIsModalOpen(true);
+      const iconRect = userProfileIconRef.current.getBoundingClientRect();
+      const iconPosition = {
+        top: iconRect.bottom +20,
+        left: iconRect.left -135,
+      };
+      setModalPosition(iconPosition);
+      setIsModalOpen(prevState => !prevState);
     } else {
       navigate("/login");
     }
   };
+
   const openModalOrRedirect = (path) => {
     const token = localStorage.getItem("accessToken");
     if (token) {
@@ -80,7 +87,28 @@ function Header() {
     }
   };
 
-  const closeModal = () => setIsModalOpen(false);
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (isModalOpen) {
+        const iconRect = userProfileIconRef.current.getBoundingClientRect();
+        const iconPosition = {
+          top: iconRect.bottom +20,
+          left: iconRect.left -135 ,
+        };
+        setModalPosition(iconPosition);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [isModalOpen]);
 
   return (
     <HeaderContainer>
@@ -95,12 +123,12 @@ function Header() {
           <Link to="/ourtrip">
             <LinkButton>우리의 여행</LinkButton>
           </Link>
-          <HeaderIcon>
-            <UserProfileIcon openModal={openModal} />
+          <HeaderIcon ref={userProfileIconRef}>
+            <UserProfileIcon openModal={toggleModal} />
           </HeaderIcon>
         </ButtonContainer>
       </Container>
-      {isModalOpen && <ProfileModal closeModal={closeModal} />}
+      {isModalOpen && <ProfileModal closeModal={closeModal} position={modalPosition} />}
     </HeaderContainer>
   );
 }

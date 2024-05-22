@@ -41,12 +41,14 @@ const Container = styled.div`
     margin-top: -110px; // 헤더의 높이의 음수값
   }
 `;
-const H2 = styled.h2`
+const H2 = styled.div`
   font-size: 18px;
   font-family: PretendardExtraBold;
   color: var(--text-color);
   width: 100%;
   margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
 `;
 const LogContainer = styled.div`
   position: relative;

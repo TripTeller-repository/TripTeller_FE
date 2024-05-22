@@ -1,4 +1,4 @@
-import { useState,} from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUserState } from "/src/hooks/useUserState";
 import styled from "styled-components";
@@ -8,31 +8,18 @@ import Button from "/src/components/commons/buttons/Button";
 import ImgUploadModal from "/src/components/commons/modals/ImgUploadModal";
 import { URL } from "/src/api/API";
 
-const ModalContainer = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-`;
-
 const ModalContent = styled.div`
-  position: fixed;
-  top: 100px;
-  left: 66%;
   background-color: var(--white-color);
   width: 270px;
-  height: 400px;
+  height: 380px;
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   max-width: 500px;
   z-index: 100;
+  position: fixed;
+  top: ${({ top }) => top}px;
+  left: ${({ left }) => left}px;
 `;
 
 const ProfileContainer = styled.div`
@@ -45,7 +32,7 @@ const ProfileContainer = styled.div`
 `;
 
 const ProfileContent = styled.div`
-  margin-top: 5px; /* 내부 요소 간격 조정 */
+  margin-top: 5px;
   text-align: center;
   margin: 14px;
   h1 {
@@ -60,6 +47,7 @@ const ProfileContent = styled.div`
     margin-bottom: 8px;
   }
 `;
+
 const ProfileImageContainer = styled.div`
   width: 120px;
   height: 120px;
@@ -82,8 +70,8 @@ const ProfileImageContainer = styled.div`
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.4); // 어두운 오버레이 효과
-    border-radius: 50%; // 동일한 radius 적용
+    background-color: rgba(0, 0, 0, 0.4);
+    border-radius: 50%;
   }
 
   &:hover > button {
@@ -106,28 +94,23 @@ const ButtonContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
 `;
+
 const NewButton = styled(Button)`
   width: 220px;
 `;
 
-// 프로필 모달 컴포넌트
-const ProfileModal = ({ closeModal }) => {
-  // 유저 정보 상태 전역상태 설정
-  const { user,setUser  } = useUserState();
+const ProfileModal = ({ position, closeModal }) => {
+  const { user, setUser } = useUserState();
   const [showNicknameModal, setShowNicknameModal] = useState(false);
   const [showImgUploadModal, setShowImgUploadModal] = useState(false);
 
   const navigate = useNavigate();
-  const updateProfileImage = (newImageUrl) => {
-    setUser({...user, profileImage: newImageUrl});
-  };
-  const stopPropagation = (e) => {
-    e.stopPropagation();
-  };
 
-  
+  const updateProfileImage = (newImageUrl) => {
+    setUser({ ...user, profileImage: newImageUrl });
+  };
 
   const handleLogout = () => {
     Swal.fire({
@@ -135,8 +118,8 @@ const ProfileModal = ({ closeModal }) => {
       title: "로그아웃이 완료되었습니다.",
     }).then(() => {
       localStorage.removeItem("accessToken");
-      closeModal();
       navigate("/");
+      closeModal();
     });
   };
 
@@ -158,27 +141,23 @@ const ProfileModal = ({ closeModal }) => {
       },
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch(`${ URL }/auth/withdraw`, {
-          method: 'DELETE',
+        fetch(`${URL}/auth/withdraw`, {
+          method: "DELETE",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
           },
         })
-        .then(() => {
-          Swal.fire(
-            "탈퇴 완료!",
-            "계정이 성공적으로 삭제되었습니다.",
-            "success"
-          ).then(() => {
-            localStorage.removeItem("accessToken");
-            closeModal();
-            navigate("/");
+          .then(() => {
+            Swal.fire("탈퇴 완료!", "계정이 성공적으로 삭제되었습니다.", "success").then(() => {
+              localStorage.removeItem("accessToken");
+              navigate("/");
+              closeModal();
+            });
+          })
+          .catch((error) => {
+            console.error("회원 탈퇴 처리 중 에러 발생:", error);
           });
-        })
-        .catch((error) => {
-          console.error("회원 탈퇴 처리 중 에러 발생:", error);
-        });
       }
     });
   };
@@ -192,42 +171,41 @@ const ProfileModal = ({ closeModal }) => {
   };
 
   return (
-    <ModalContainer onClick={closeModal}>
-      <ModalContent onClick={stopPropagation}>
-        <ProfileContainer>
-          <ProfileImageContainer src={user.profileImage}>
-             <AddButton onClick={handleAddPhotoClick} label="Add photo" />
-          </ProfileImageContainer>
-          <ProfileContent>
-            <h1>{user.nickname}</h1>
-            <p>{user.email}</p>
-          </ProfileContent>
-        </ProfileContainer>
-        {showImgUploadModal && (
-          <ImgUploadModal
-            onClose={handleModalClose}
-            uploadType="profile"
-            width="120px"
-            height="120px"
-            radius="50%"
-            updateProfileImage={updateProfileImage}
-          />
-        )}
-        <ButtonContainer>
-          <NewButton onClick={() => setShowNicknameModal(true)}>
-            닉네임 변경
-          </NewButton>
-          <NewButton onClick={handleLogout}>로그아웃</NewButton>
-          <NewButton onClick={handleDeleteAccount}>회원탈퇴</NewButton>
-        </ButtonContainer>
-        {showNicknameModal && (
-          <NicknameModal
-            onClose={() => setShowNicknameModal(false)}
-            updateNickname={user.nickname}
-          />
-        )}
-      </ModalContent>
-    </ModalContainer>
+    <ModalContent top={position.top} left={position.left}>
+      <ProfileContainer>
+        <ProfileImageContainer src={user.profileImage}>
+          <AddButton onClick={handleAddPhotoClick} label="Add photo" />
+        </ProfileImageContainer>
+        <ProfileContent>
+          <h1>{user.nickname}</h1>
+          <p>{user.email}</p>
+        </ProfileContent>
+      </ProfileContainer>
+      {showImgUploadModal && (
+        <ImgUploadModal
+          onClose={handleModalClose}
+          uploadType="profile"
+          width="120px"
+          height="120px"
+          radius="50%"
+          updateProfileImage={updateProfileImage}
+        />
+      )}
+      <ButtonContainer>
+        <NewButton onClick={() => setShowNicknameModal(true)}>닉네임 변경</NewButton>
+        <NewButton onClick={handleLogout}>로그아웃</NewButton>
+        <NewButton onClick={handleDeleteAccount}>회원탈퇴</NewButton>
+      </ButtonContainer>
+      {showNicknameModal && (
+        <NicknameModal
+          onClose={() => {
+            setShowNicknameModal(false)
+            closeModal()
+          }}
+          updateNickname={user.nickname}
+        />
+      )}
+    </ModalContent>
   );
 };
 

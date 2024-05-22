@@ -160,9 +160,14 @@ function SignUpForm() {
         alert('회원가입 요청 중 문제가 발생했습니다.');
       }
     } else {
-      alert("모든 필드의 유효성을 확인해 주세요.");
-    }
-  };
+      let errorMessage = "모든 필드의 유효성을 확인해주세요:\n";
+    if (!isEmailValid) errorMessage += "- 잘못된 이메일 양식입니다.\n";
+    if (!isPasswordValid) errorMessage += "- 영문, 숫자, 특수문자 조합으로 8자 이상 입력해주세요.\n";
+    if (!isPasswordConfirmValid) errorMessage += "- 비밀번호가 일치하지 않습니다.\n";
+    if (!isNicknameValid) errorMessage += "- 잘못된 닉네임 양식입니다.\n";
+    alert(errorMessage);
+  }
+};
 
   return (
     <SignUpContainer>
