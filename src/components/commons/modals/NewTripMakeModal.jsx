@@ -3,7 +3,7 @@ import styled from "styled-components";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { URL } from "/src/api/API";
-import { useNavigate  } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const ModalWrapper = styled.div`
   position: fixed;
@@ -111,56 +111,53 @@ const NewTripMakeModal = ({ closeModal }) => {
   const [region, setRegion] = useState("");
   const navigate = useNavigate();
 
-  // 해당 모달 내에서 id를 사용하기 때문에 feedId,travelPlanId 상태관리할 필요 없음 
-  
-  const accessToken = localStorage.getItem('accessToken');
+  const accessToken = localStorage.getItem("accessToken");
 
   const handleSubmit = async () => {
     try {
       const feedResponse = await fetch(`${URL}/feed`, {
         method: "POST",
         headers: {
-          'Authorization': `Bearer ${accessToken}`,
-          'Content-Type': "application/json"
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           public: false,
-          coverImage: "/img/coverImage_default.jpg"
-        })
+          coverImage: "/img/coverImage_default.jpg",
+        }),
       });
-      
+
       if (!feedResponse.ok) {
         throw new Error("에러");
       }
 
-      const feedId = await feedResponse.json();
+      const feedData = await feedResponse.json();
+      const feedId = feedData._id;
 
-      const planResponse = await fetch(`${URL}/feed/${feedId._id}/travelPlan`, {
+      const planResponse = await fetch(`${URL}/feed/${feedId}/travelPlan`, {
         method: "POST",
         headers: {
-          'Authorization': `Bearer ${accessToken}`,
-          'Content-Type': "application/json"
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          "title": title,
-          "startDate": startDate,
-          "endDate": endDate,
-          "numberOfPeople": numberOfPeople,
-          "region": region,
-        })
+          title,
+          startDate,
+          endDate,
+          numberOfPeople,
+          region,
+        }),
       });
 
       if (!planResponse.ok) {
         throw new Error("에러");
       }
 
-      const travelPlanId = await planResponse.json();
-      
-      closeModal(); 
-      
-      // 페이지 이동 처리, feedData._id,planData._id: 생성된 id
-      navigate(`/maketrip?feedId=${feedId._id}&travelPlanId=${travelPlanId._id}`);
+      const planData = await planResponse.json();
+      const travelPlanId = planData._id;
 
+      closeModal();
+      navigate(`/maketrip?feedId=${feedId}&travelPlanId=${travelPlanId}`);
     } catch (error) {
       console.error("에러", error);
     }
@@ -168,17 +165,17 @@ const NewTripMakeModal = ({ closeModal }) => {
 
   return (
     <ModalWrapper onMouseDown={closeModal}>
-      <ModalContent onMouseDown={(e)=>e.stopPropagation()}>
+      <ModalContent onMouseDown={(e) => e.stopPropagation()}>
         <FlexContainer>
           <Title>신규 일정 생성</Title>
         </FlexContainer>
         <FlexContainer>
           <ModalContentText>제목</ModalContentText>
-          <Input 
+          <Input
             placeholder="20자 이내 입력해주세요."
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            maxLength={20} // 최대 길이 20자로 설정
+            maxLength={20}
           />
         </FlexContainer>
         <FlexContainer>
@@ -187,32 +184,31 @@ const NewTripMakeModal = ({ closeModal }) => {
             selected={startDate}
             onChange={(date) => setStartDate(date)}
             placeholderText="시작일"
+            minDate={new Date()}
           />
           <Separator>~</Separator>
           <DayEndInput
             selected={endDate}
             onChange={(date) => setEndDate(date)}
             placeholderText="종료일"
-            minDate={startDate} // 시작일 이후의 날짜만 종료일로 선택 가능
+            minDate={startDate}
+            maxDate={startDate ? new Date(startDate.getTime() + 15 * 24 * 60 * 60 * 1000) : null} // 시작일로부터 최대 15일로 제한
           />
         </FlexContainer>
-
         <FlexContainer>
           <ModalContentText>인원</ModalContentText>
-          <Input 
+          <Input
             placeholder="인원을 입력해주세요."
             value={numberOfPeople}
             onChange={(e) => setNumberOfPeople(e.target.value)}
           />
         </FlexContainer>
-
         <FlexContainer>
           <ModalContentText>지역</ModalContentText>
-          <Dropdown
-            value={region}
-            onChange={(e) => setRegion(e.target.value)}
-          >
-            <option value="" selected>지역을 선택해주세요.</option>
+          <Dropdown value={region} onChange={(e) => setRegion(e.target.value)}>
+            <option value="" disabled>
+              지역을 선택해주세요.
+            </option>
             <option value="Seoul">서울특별시</option>
             <option value="GyeonggiIncheon">경기 / 인천</option>
             <option value="ChungcheongDaejeon">충청 / 대전</option>
@@ -223,8 +219,7 @@ const NewTripMakeModal = ({ closeModal }) => {
             <option value="Jeju">제주</option>
           </Dropdown>
         </FlexContainer>
-
-        <SubmitButton onClick={handleSubmit}>등록하기</SubmitButton> 
+        <SubmitButton onClick={handleSubmit}>등록하기</SubmitButton>
       </ModalContent>
     </ModalWrapper>
   );
