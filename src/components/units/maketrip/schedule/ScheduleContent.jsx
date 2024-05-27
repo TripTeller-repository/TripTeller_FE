@@ -33,7 +33,7 @@ const CenterContainer = styled.div`
 `
 
 const ContentContainer = styled.div`
-  min-width: 250px;
+  min-width: 260px;
   display: flex;
   flex-direction: column;
   align-items: center;

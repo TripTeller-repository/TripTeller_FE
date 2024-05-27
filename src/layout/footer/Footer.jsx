@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import GitIcon from "/icon/github.svg";
 import YoutubeIcon from "/icon/youtube.svg";
 import LogoImage from "/img/logo.png";
+import TopButtonImage from "/icon/topbutton.png";
 
 const FooterContainer = styled.footer`
   display: flex;
@@ -40,20 +41,37 @@ const CopyRightText = styled.div`
 
 const FooterIcons = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: flex-end;
-  gap: 8px;
+  gap: 28px;
 `;
 
 const StyledIcon = styled.img`
   margin: 10px 0;
 `;
+
 const StyledLogo = styled.img`
   height: 30px;
   margin-top: 16px;
 `;
 
+const TopButton = styled.img`
+  width: 50px;
+  height: 50px;
+  position: fixed;
+  bottom: 200px;
+  right: 80px;
+  cursor: pointer;
+`;
+
 function Footer() {
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
+
   return (
     <FooterContainer>
       <FooterSection>
@@ -66,7 +84,7 @@ function Footer() {
           </CopyRightText>
         </FooterInfo>
         <FooterIcons>
-          <Link to="/">
+          <Link to="https://github.com/TripTeller-repository">
             <StyledIcon src={GitIcon} alt="깃허브로 이동" />
           </Link>
           <Link to="https://youtu.be/IOLBQCbE9PY?feature=shared">
@@ -74,6 +92,7 @@ function Footer() {
           </Link>
         </FooterIcons>
       </FooterSection>
+      <TopButton src={TopButtonImage} alt="맨 위로 이동" onClick={scrollToTop} />
     </FooterContainer>
   );
 }

@@ -1,26 +1,39 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 
-const BannerContainer = styled.div`
+const BannerWrapper = styled.div`
   width: 100%;
   height: 400px;
   position: relative;
+  overflow: hidden;
   margin-bottom: 30px;
+`;
+
+const BannerContainer = styled.div`
+  display: flex;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  transition: transform 0.5s ease-in-out;
+  transform: translateX(${(props) => props.$translateValue}%);
+`;
+
+const Slide = styled.div`
+  min-width: 100%;
+  height: 100%;
+  background-size: cover;
   background-position: center;
-  bacground-size: cover;
   background-image: ${(props) => `url(${props.$imageurl})`};
-  background-color: ${(props) => props.$backgroundColor};
 `;
 
 const BannerText1 = styled.div`
   font-size: 25px;
   font-family: "PretendardSemiBold";
-  color: var(--main-color);
+  color: white;
   text-align: center;
   opacity: 0;
   animation: fadeIn 0.5s ease-in-out 0.3s forwards;
   margin-top: 120px;
-
   text-shadow: (--box-shadow);
 
   @keyframes fadeIn {
@@ -37,7 +50,7 @@ const BannerText2 = styled.div`
   font-size: 76px;
   font-weight: 900;
   font-family: "PretendardBlack";
-  color: var(--main-color);
+  color: white;
   text-align: center;
   margin-top: 20px;
   margin-bottom: 40px;
@@ -76,11 +89,10 @@ const BackwardIcon = styled.img`
   &:hover {
     filter: brightness(0.9);
   }
-  transition: transform 0.3s ease; /* 호버 시 변환 효과 설정 */
+  transition: transform 0.3s ease;
 
-  /* 호버 시 이미지 크기 확대 */
   &:hover {
-    transform: scale(1.1); /* 이미지 크기를 1.1배로 확대 */
+    transform: scale(1.1);
   }
   &:active {
     filter: brightness(2);
@@ -95,11 +107,10 @@ const ForwardIcon = styled.img`
   &:hover {
     filter: brightness(0.9);
   }
-  transition: transform 0.3s ease; /* 호버 시 변환 효과 설정 */
+  transition: transform 0.3s ease;
 
-  /* 호버 시 이미지 크기 확대 */
   &:hover {
-    transform: scale(1.1); /* 이미지 크기를 1.1배로 확대 */
+    transform: scale(1.1);
   }
   &:active {
     filter: brightness(2);
@@ -120,8 +131,7 @@ const PageDot = styled.div`
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background-color: ${(props) =>
-    props.$active ? "var(--main-color)" : "#ccc"};
+  background-color: ${(props) => (props.$active ? "var(--main-color)" : "#ccc")};
   margin: 0 5px;
 `;
 
@@ -129,20 +139,15 @@ function MainBanner() {
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const slideImages = [
+    "/img/banner05.jpg",
     "/img/banner04.jpg",
-    "/img/mainbanner.gif",
-    "/img/banner02.jpg", //2,3번째 슬라이드에는 이미지 안 넣음
-  ];
-
-  const slideBackgroundColors = [
-    "", // 첫 번째 슬라이드 배경색
-    "",
-    "",
+    "/img/banner01.jpeg",
+    "/img/banner02.jpg",
   ];
 
   const handlePrevSlide = () => {
     setCurrentSlide((prevSlide) =>
-      prevSlide === 0 ? slideImages.length - 1 : prevSlide - 1,
+      prevSlide === 0 ? slideImages.length - 1 : prevSlide - 1
     );
   };
 
@@ -151,28 +156,19 @@ function MainBanner() {
   };
 
   return (
-    <BannerContainer
-      $imageurl={slideImages[currentSlide]}
-      $backgroundColor={slideBackgroundColors[currentSlide]}
-    >
-      <BannerText1
-        style={{ color: currentSlide === 1 ? "var(--main-color)" : "white" }}
-      >
-        여행의 시작과 끝, 모든 순간을 함께
-        <br />
-      </BannerText1>
-      <BannerText2
-        style={{ color: currentSlide === 1 ? "var(--main-color)" : "white" }}
-      >
-        TripTeller
-      </BannerText2>
+    <BannerWrapper>
+      <BannerContainer $translateValue={-currentSlide * 100}>
+        {slideImages.map((image, index) => (
+          <Slide key={index} $imageurl={image}>
+            <BannerText1>여행의 시작과 끝, 모든 순간을 함께</BannerText1>
+            <BannerText2>TripTeller</BannerText2>
+          </Slide>
+        ))}
+      </BannerContainer>
       <IconContainerWrapper>
         <IconContainer>
           <BackwardIcon src="./icon/arrow_back.svg" onClick={handlePrevSlide} />
-          <ForwardIcon
-            src="./icon/arrow_forward.svg"
-            onClick={handleNextSlide}
-          />
+          <ForwardIcon src="./icon/arrow_forward.svg" onClick={handleNextSlide} />
         </IconContainer>
       </IconContainerWrapper>
       <PageIndicator>
@@ -180,7 +176,7 @@ function MainBanner() {
           <PageDot key={index} $active={currentSlide === index} />
         ))}
       </PageIndicator>
-    </BannerContainer>
+    </BannerWrapper>
   );
 }
 

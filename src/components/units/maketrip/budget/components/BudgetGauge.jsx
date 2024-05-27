@@ -11,6 +11,7 @@ const GaugeContainer = styled.div`
   display: flex;
   box-shadow: var(--box-shadow);
   position: sticky;
+  margin-right: 20px;
   top: 300px;
 `;
 
