@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 
 const BannerWrapper = styled.div`
@@ -29,7 +29,7 @@ const Slide = styled.div`
 const BannerText1 = styled.div`
   font-size: 25px;
   font-family: "PretendardSemiBold";
-  color: white;
+  color: var(--main-color);
   text-align: center;
   opacity: 0;
   animation: fadeIn 0.5s ease-in-out 0.3s forwards;
@@ -50,7 +50,7 @@ const BannerText2 = styled.div`
   font-size: 76px;
   font-weight: 900;
   font-family: "PretendardBlack";
-  color: white;
+  color: var(--main-color);
   text-align: center;
   margin-top: 20px;
   margin-bottom: 40px;
@@ -137,9 +137,8 @@ const PageDot = styled.div`
 
 function MainBanner() {
   const [currentSlide, setCurrentSlide] = useState(0);
-
   const slideImages = [
-    "/img/banner05.jpg",
+    "/img/mainbanner.gif",
     "/img/banner04.jpg",
     "/img/banner01.jpeg",
     "/img/banner02.jpg",
@@ -154,6 +153,14 @@ function MainBanner() {
   const handleNextSlide = () => {
     setCurrentSlide((prevSlide) => (prevSlide + 1) % slideImages.length);
   };
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      handleNextSlide();
+    }, 3000); // 정해진 초마다 슬라이드 변경
+
+    return () => clearInterval(interval); // 컴포넌트 언마운트 시 인터벌 클리어
+  }, []);
 
   return (
     <BannerWrapper>
