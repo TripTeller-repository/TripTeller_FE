@@ -8,7 +8,7 @@ const CardContainer = styled.div`
   width: 380px;
   height: 350px;
   border-radius: 5px;
-  position: relative; // 아이콘 사진 안에 배치하기 위해
+  position: relative;
 `;
 
 const ImageContainer = styled.a`
@@ -23,11 +23,10 @@ const Image = styled.img`
   border-radius: 10px;
   box-shadow: var(--box-shadow);
   overflow: hidden;
-  transition: transform 0.3s ease; /* 호버 시 변환 효과 설정 */
+  transition: transform 0.3s ease;
 
-  /* 호버 시 이미지 크기 확대 */
   &:hover {
-    transform: scale(1.05); /* 이미지 크기를 1.1배로 확대 */
+    transform: scale(1.05);
   }
 `;
 
@@ -56,7 +55,15 @@ const Description = styled.div`
   text-align: start;
 `;
 
-function OurTripFeedCard({ imageUrl, title, startDate, endDate, href }) {
+const Region = styled.div`
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: var(--text-color);
+  text-align: start;
+`;
+
+function OurTripFeedCard({ imageUrl, title, startDate, endDate, region, href }) {
   const formattedDate = (date) => {
     return dayjs(date).locale("ko").format("YYYY.MM.DD");
   };
@@ -71,6 +78,7 @@ function OurTripFeedCard({ imageUrl, title, startDate, endDate, href }) {
       </ImageContainer>
       <TextContainer>
         <a href={href}>
+          <Region>{region}</Region>
           <Title>{title}</Title>
         </a>
         <Description>

@@ -157,7 +157,7 @@ const NewTripMakeModal = ({ closeModal }) => {
       const travelPlanId = planData._id;
 
       closeModal();
-      navigate(`/maketrip?feedId=${feedId}&travelPlanId=${travelPlanId}`);
+      navigate(`/maketrip?feedId=${feedId}&travelPlanId=${travelPlanId}&region=${region}`);
     } catch (error) {
       console.error("에러", error);
     }
@@ -192,7 +192,7 @@ const NewTripMakeModal = ({ closeModal }) => {
             onChange={(date) => setEndDate(date)}
             placeholderText="종료일"
             minDate={startDate}
-            maxDate={startDate ? new Date(startDate.getTime() + 15 * 24 * 60 * 60 * 1000) : null} // 시작일로부터 최대 15일로 제한
+            maxDate={startDate ? new Date(startDate.getTime() + 15 * 24 * 60 * 60 * 1000) : null}
           />
         </FlexContainer>
         <FlexContainer>
