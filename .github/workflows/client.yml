@@ -47,15 +47,11 @@ jobs:
 
       # react 빌드한 /dist를 s3로 업로드
       - name: Upload to S3
-        env:
-          BUCKET_NAME: ${{ secrets.AWS_S3_BUCKET_NAME}}
         run: |
-          aws s3 sync ../dist s3://${{ secrets.AWS_S3_BUCKET_NAME}}
+          aws s3 sync ../dist s3://${{ secrets.AWS_S3_BUCKET_NAME}} --delete
 
       # 업로드한 s3 파일을 각 CDN 캐시 무효화하여 리프레시 하기
       - name: CloudFront Invalidation # CloudFront 캐시를 무효화하는 단계
-        env:
-          CLOUD_FRONT_ID: ${{ secrets.AWS_DISTRIBUTION_ID }} # CloudFront 배포 ID를 시크릿에서 가져오기
         run: |
           aws cloudfront create-invalidation \
-            --distribution-id ${{ secrets.AWS_DISTRIBUTION_ID }} --paths /*
+            --distribution-id ${{ secrets.AWS_DISTRIBUTION_ID }} --paths "/*"
