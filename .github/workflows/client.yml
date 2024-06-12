@@ -43,15 +43,14 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_S3_ACCESSKEYID }} # AWS 액세스 키 ID를 시크릿에서 가져오기
           aws-secret-access-key: ${{ secrets.AWS_S3_SECRETACCESSKEY }} # AWS 시크릿 액세스 키를 시크릿에서 가져오기
-          aws-region: ${{ secrets.AWS_S3_REGION }} # AWS 리전 설정
+          aws-region: ${{secrets.AWS_S3_REGION}} # AWS 리전 설정
 
       # react 빌드한 /build를 s3로 업로드
       - name: Upload to S3 # 빌드된 파일을 S3에 업로드하는 단계
         env:
           BUCKET_NAME: ${{ secrets.AWS_S3_BUCKET }} # S3 버킷 이름을 시크릿에서 가져오기
         run: |
-          aws s3 sync \
-            . s3://$BUCKET_NAME # 빌드된 파일을 S3 버킷에 동기화
+          aws s3 sync . s3://$BUCKET_NAME # 빌드된 파일을 S3 버킷에 동기화
 
       # 업로드한 s3 파일을 각 CDN 캐시 무효화하여 리프레시 하기
       - name: CloudFront Invalidation # CloudFront 캐시를 무효화하는 단계
