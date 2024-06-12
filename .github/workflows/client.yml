@@ -45,12 +45,12 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_S3_SECRETACCESSKEY }} # AWS 시크릿 액세스 키를 시크릿에서 가져오기
           aws-region: ${{secrets.AWS_S3_REGION}} # AWS 리전 설정
 
-      # react 빌드한 /build를 s3로 업로드
+      # react 빌드한 /dist를 s3로 업로드
       - name: Upload to S3
         env:
           BUCKET_NAME: ${{ secrets.AWS_S3_BUCKET_NAME}}
         run: |
-          aws s3 sync ./build s3://$BUCKET_NAME
+          aws s3 sync ./dist s3://$BUCKET_NAME
 
       # 업로드한 s3 파일을 각 CDN 캐시 무효화하여 리프레시 하기
       - name: CloudFront Invalidation # CloudFront 캐시를 무효화하는 단계
