@@ -50,7 +50,7 @@ jobs:
         env:
           BUCKET_NAME: ${{ secrets.AWS_S3_BUCKET }} # S3 버킷 이름을 시크릿에서 가져오기
         run: |
-          aws s3 sync . s3://$BUCKET_NAME # 빌드된 파일을 S3 버킷에 동기화
+          aws s3 cp . s3://$BUCKET_NAME # 빌드된 파일을 S3 버킷에 동기화
 
       # 업로드한 s3 파일을 각 CDN 캐시 무효화하여 리프레시 하기
       - name: CloudFront Invalidation # CloudFront 캐시를 무효화하는 단계
