@@ -35,7 +35,7 @@ function MainContent() {
   useEffect(() => {
     const fetchBestData = async () => {
       try {
-        const response = await fetch(`${URL}/feeds/order/byRecent?pageNumber=1`, {
+        const response = await fetch(`${URL}/our-trip/order-by/recent?pageNumber=1`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -63,7 +63,7 @@ function MainContent() {
   useEffect(() => {
     const fetchNewData = async () => {
       try {
-        const response = await fetch(`${URL}/feeds/order/byLikeCount?pageNumber=1`, {
+        const response = await fetch(`${URL}/our-trip/order-by/like-count?pageNumber=1`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
