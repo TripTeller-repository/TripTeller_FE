@@ -109,8 +109,8 @@ const LoadingIndicator = styled.div`
 
 const OurTripMainContent = () => {
   const [ourTripData, setOurTripData] = useState([]);
-  const [sortBy, setSortBy] = useState("latest");
-  const [activeButton, setActiveButton] = useState("latest");
+  const [sortBy, setSortBy] = useState("recent");
+  const [activeButton, setActiveButton] = useState("recent");
   const [pageNumber, setPageNumber] = useState(1);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
@@ -120,7 +120,8 @@ const OurTripMainContent = () => {
 
   const fetchNewData = async () => {
     try {
-      const response = await fetch(`${URL}/feeds/order/` + (sortBy === "popular" ? `byLikeCount?pageNumber=${pageNumber}` : `byRecent?pageNumber=${pageNumber}`), {
+      const url = `${URL}/our-trip/order-by/${sortBy === "recent" ? "recent" : "like-count"}?pageNumber=${pageNumber}`;
+      const response = await fetch(url, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -147,7 +148,6 @@ const OurTripMainContent = () => {
 
       setHasMore(data.feeds.data.length > 0);
 
-      // 로딩 상태를 2초 동안 유지
       setTimeout(() => {
         setLoading(false);
       }, 2000);
@@ -202,10 +202,10 @@ const OurTripMainContent = () => {
           <Title>여행 족보</Title>
           <TabButtonContainer>
             <ToggleButton
-              $active={activeButton === "latest"}
+              $active={activeButton === "recent"}
               onClick={() => {
-                setSortBy("latest");
-                setActiveButton("latest");
+                setSortBy("recent");
+                setActiveButton("recent");
               }}
             >
               최신순
@@ -213,7 +213,7 @@ const OurTripMainContent = () => {
             <ToggleButton
               $active={activeButton === "popular"}
               onClick={() => {
-                setSortBy("popular");
+                setSortBy("like-count");
                 setActiveButton("popular");
               }}
             >

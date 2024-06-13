@@ -61,7 +61,7 @@ function MyTripLogContent() {
 
   const fetchNewData = async () => {
     try {
-      const response = await fetch(`${URL}/feed/order/byRecent?pageNumber=${pageNumber}`, {
+      const response = await fetch(`${URL}/my-trip/order-by/recent?pageNumber=${pageNumber}`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -74,7 +74,7 @@ function MyTripLogContent() {
       }
 
       const data = await response.json();
-      console.log(data); // 응답 데이터 콘솔 로그 출력
+      console.log(data); 
 
       if (!data.feeds || !Array.isArray(data.feeds.data)) {
         throw new Error("API 응답이 올바르지 않습니다.");
@@ -89,7 +89,7 @@ function MyTripLogContent() {
 
       setHasMore(data.feeds.data.length > 0);
 
-      // 로딩 상태를 2초 동안 유지
+      // 로딩 아이콘 2초 동안 출력
       setTimeout(() => {
         setLoading(false);
       }, 2000);
@@ -145,7 +145,7 @@ function MyTripLogContent() {
               startDate={feed.startDate}
               endDate={feed.endDate}
               imageUrl={feed.thumbnailUrl}
-              href={`/maketrip?feedId=${feed.feedId}&travelPlanId=${feed.travelPlanId}`}
+              href={`/my-trip?feedId=${feed.feedId}&travelPlanId=${feed.travelPlanId}`}
             />
           ))}
         </FeedCardContainer>
