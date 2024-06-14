@@ -14,13 +14,16 @@ export function useAPI() {
       const options = {
         method,
         headers,
+        credentials: "include", // 서버의 쿠키 허용
       };
       if (params) options.body = JSON.stringify(params);
       const response = await fetch(`${URL}${url}`, options);
 
       if (!response.ok) {
         const errorData = await response.json(); // 에러 응답 데이터 읽기
-        throw new Error(errorData.message || "네트워크 응답이 올바르지 않습니다.");
+        throw new Error(
+          errorData.message || "네트워크 응답이 올바르지 않습니다.",
+        );
       }
 
       const data = await response.json();
