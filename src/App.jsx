@@ -43,7 +43,7 @@ function App() {
     if (token) {
       fetchCurrentUser(); // 토큰이 있을 때만 사용자 정보 가져오기
     }
-  }, [fetchCurrentUser]);
+  }, []);
 
   return (
     <>
