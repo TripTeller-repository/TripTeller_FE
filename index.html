@@ -5,6 +5,11 @@
     <link rel="icon" type="image/svg+xml" href="/cherry-blossom.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>TripTeller</title>
+    <!-- 카카오 맵 -->
+    <script
+      type="text/javascript"
+      src="//dapi.kakao.com/v2/maps/sdk.js?appkey=7930b0fcb76e806a437e3c6260b226ef&libraries=services,clusterer,drawing"
+    ></script>
   </head>
   <body>
     <div id="root"></div>
@@ -15,13 +20,6 @@
       integrity="sha384-kDljxUXHaJ9xAb2AzRd59KxjrFjzHa5TAoFQ6GbYTCAG0bjM55XohjjDT7tDDC01"
       crossorigin="anonymous"
     ></script>
-
-    <!-- 카카오 맵 -->
-    <script
-      type="text/javascript"
-      src="//dapi.kakao.com/v2/maps/sdk.js?appkey=7930b0fcb76e806a437e3c6260b226ef&libraries=services,clusterer,drawing"
-    ></script>
-
     <script>
       // SDK를 초기화 합니다. 사용할 앱의 JavaScript 키를 설정해야 합니다.
       Kakao.init("8aedf2c65e3ed14e7a47844a4108d93a");
