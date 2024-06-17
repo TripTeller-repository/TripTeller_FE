@@ -117,7 +117,7 @@ function OurtripDetailsContent() {
   // 피드 데이터 불러오기
   const fetchTravelData = async () => {
     try {
-      const response = await fetch(`${URL}/feeds/${feedId}`, {
+      const response = await fetch(`${URL}/our-trip/${feedId}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -125,11 +125,26 @@ function OurtripDetailsContent() {
       });
       if (!response.ok) {
         const errorData = await response.json();
+        console.log("errorData", errorData);
         throw new Error(
           errorData.message || "네트워크 응답이 올바르지 않습니다.",
         );
       }
       const data = await response.json();
+      console.log("data", data);
+
+      const travelPlanId = data.travelPlanId;
+      const travelPlanResponse = await fetch(
+        `${URL}/our-trip/${feedId}/travel-plan/${travelPlanId}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      );
+
+      console.log("travelPlanResponse", travelPlanResponse);
       setFeedData(data[0]);
       const dailyPlans = data[0].travelPlan.dailyPlans.filter(
         (d) => d.dateType === "DATE",
@@ -143,7 +158,7 @@ function OurtripDetailsContent() {
   // 작성자 데이터 불러오기
   const fetchUserData = async (userId) => {
     try {
-      const response = await fetch(`${URL}/feeds/user/info`, {
+      const response = await fetch(`${URL}/our-trip/user-info`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
