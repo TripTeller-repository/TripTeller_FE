@@ -16,7 +16,9 @@ function useLogImgUpload() {
     try {
       const resizedImage = await resizeImage(file);
       const resizedImageUrl = URL.createObjectURL(resizedImage);
-      setResizedFile(new File([resizedImage], file.name, { type: "image/jpeg" }));
+      setResizedFile(
+        new File([resizedImage], file.name, { type: "image/jpeg" }),
+      );
       setImagePreview(resizedImageUrl);
     } catch (error) {
       console.error("Error resizing image:", error);
@@ -44,7 +46,7 @@ function useLogImgUpload() {
     try {
       // useAPI를 사용하여 서명된 URL 요청
       const response = await request(
-        `/dailySchedule/travel-log-image-signed-url/${fileName}`,
+        `/daily-schedule/travel-log-image-signed-url/${fileName}`,
       );
       const signedUrl = response.data.signedUrl;
 

@@ -89,6 +89,9 @@ function TripLogContent() {
     fetchData();
   }, []);
 
+  console.log("dailyScheduleId: ", dailyScheduleId);
+  console.log("newText: ", newText);
+
   // 사용자가 입력한 text를 전송하기
   const handleSaveText = async (dailyScheduleId, newText) => {
     try {
@@ -106,6 +109,7 @@ function TripLogContent() {
         },
       );
 
+      console.log("response", response);
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(
@@ -150,8 +154,6 @@ function TripLogContent() {
       if (!response.ok) {
         throw new Error("네트워크 응답이 올바르지 않습니다.");
       }
-
-
     } catch (error) {
       console.error("데이터를 업데이트하는데 실패했습니다:", error.message);
 
