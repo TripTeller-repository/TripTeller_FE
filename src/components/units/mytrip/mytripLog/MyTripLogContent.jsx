@@ -34,15 +34,22 @@ const LoadingIndicator = styled.div`
     aspect-ratio: 1;
     border-radius: 50%;
     padding: 1px;
-    background: conic-gradient(#0000 10%,#f03355) content-box;
-    -webkit-mask:
-      repeating-conic-gradient(#0000 0deg,#000 1deg 20deg,#0000 21deg 36deg),
-      radial-gradient(farthest-side,#0000 calc(100% - var(--b) - 1px),#000 calc(100% - var(--b)));
+    background: conic-gradient(#0000 10%, #f03355) content-box;
+    -webkit-mask: repeating-conic-gradient(
+        #0000 0deg,
+        #000 1deg 20deg,
+        #0000 21deg 36deg
+      ),
+      radial-gradient(
+        farthest-side,
+        #0000 calc(100% - var(--b) - 1px),
+        #000 calc(100% - var(--b))
+      );
     -webkit-mask-composite: destination-in;
-            mask-composite: intersect;
+    mask-composite: intersect;
     animation: l4 1s infinite steps(10);
   }
-  
+
   @keyframes l4 {
     to {
       transform: rotate(1turn);
@@ -61,29 +68,34 @@ function MyTripLogContent() {
 
   const fetchNewData = async () => {
     try {
-      const response = await fetch(`${URL}/my-trip/order-by/recent?pageNumber=${pageNumber}`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          "Content-Type": "application/json",
+      const response = await fetch(
+        `${URL}/my-trip/order-by/recent?pageNumber=${pageNumber}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
         },
-      });
+      );
 
       if (!response.ok) {
         throw new Error("데이터를 불러오는 데 실패했습니다.");
       }
 
       const data = await response.json();
-      console.log(data); 
+      console.log(data);
 
       if (!data.feeds || !Array.isArray(data.feeds.data)) {
         throw new Error("API 응답이 올바르지 않습니다.");
       }
 
       // 중복 데이터 필터링
-      setMyTripData(prevData => {
-        const newFeedIds = new Set(data.feeds.data.map(feed => feed.feedId));
-        const filteredData = prevData.filter(feed => !newFeedIds.has(feed.feedId));
+      setMyTripData((prevData) => {
+        const newFeedIds = new Set(data.feeds.data.map((feed) => feed.feedId));
+        const filteredData = prevData.filter(
+          (feed) => !newFeedIds.has(feed.feedId),
+        );
         return [...filteredData, ...data.feeds.data];
       });
 
@@ -106,7 +118,7 @@ function MyTripLogContent() {
       threshold: 1.0,
     };
 
-    const observer = new IntersectionObserver(entries => {
+    const observer = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting && hasMore && !loading) {
         setLoading(true);
       }
@@ -126,7 +138,7 @@ function MyTripLogContent() {
   useEffect(() => {
     if (loading) {
       fetchNewData();
-      setPageNumber(prevPageNumber => prevPageNumber + 1);
+      setPageNumber((prevPageNumber) => prevPageNumber + 1);
     }
   }, [loading]);
 
@@ -138,14 +150,14 @@ function MyTripLogContent() {
     <Container>
       <MaxWidthContainer>
         <FeedCardContainer>
-          {myTripData.map(feed => (
+          {myTripData.map((feed) => (
             <FeedCard
               key={feed.feedId}
               title={feed.title}
               startDate={feed.startDate}
               endDate={feed.endDate}
               imageUrl={feed.thumbnailUrl}
-              href={`/my-trip?feedId=${feed.feedId}&travelPlanId=${feed.travelPlanId}`}
+              href={`/mytrip?feedId=${feed.feedId}&travelPlanId=${feed.travelPlanId}`}
             />
           ))}
         </FeedCardContainer>
