@@ -54,6 +54,7 @@ const LoginContent = () => {
   const onClick = () => {
     window.Kakao.Auth.authorize({
       redirectUri: "http://127.0.0.1:5173/login/redirect",
+      // redirectUri: "https://www.trip-teller.com/login/redirect", // 배포
     });
   };
 

@@ -79,7 +79,7 @@ function TripLogContent() {
   useEffect(() => {
     const fetchData = async () => {
       const response = await request(
-        `/feed/${feedId}/travelPlan/${travelPlanId}`,
+        `/my-trip/${feedId}/travel-plan/${travelPlanId}`,
       );
       const dailyPlans = response.data.dailyPlans.filter(
         (d) => d.dateType === "DATE",
@@ -93,7 +93,7 @@ function TripLogContent() {
   const handleSaveText = async (dailyScheduleId, newText) => {
     try {
       const response = await fetch(
-        `${URL}/dailySchedule/${dailyScheduleId}/travelLog/postContent`,
+        `${URL}/daily-schedule/${dailyScheduleId}/travel-log/post-content`,
         {
           method: "PUT",
           headers: {
@@ -122,7 +122,7 @@ function TripLogContent() {
 
   useEffect(() => {
     const fetchFeedData = async () => {
-      const response = await request(`/feed/${feedId}`);
+      const response = await request(`/my-trip/${feedId}`);
       const isPublic = response.data[0].isPublic;
       const coverImage = response.data[0].coverImage;
       setPublicChecked(isPublic);
@@ -138,7 +138,7 @@ function TripLogContent() {
       setPublicChecked((prevState) => !prevState);
 
       // 서버에 변경된 isPublic 값을 PUT 요청으로 전송
-      const response = await fetch(`${URL}/feed/${feedId}`, {
+      const response = await fetch(`${URL}/my-trip/${feedId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

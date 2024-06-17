@@ -28,7 +28,7 @@ const BudgetContent = () => {
   
   useEffect(() => {
     const onMounted = async () => {
-      const response = await request(`/feed/${feed_Id}/travelPlan/${travelPlan_Id}`)
+      const response = await request(`/my-trip/${feed_Id}/travel-plan/${travelPlan_Id}`)
       const fetchedTravelPlanId = response.data._id
       setTravelPlanId(fetchedTravelPlanId);
 
@@ -36,7 +36,7 @@ const BudgetContent = () => {
       setDailyPlans(dailyPlans)
       
       //예산 저장된걸 불러오는 api
-      const budgetResponse = await request(`/feed/${feed_Id}/travelPlan/${fetchedTravelPlanId}`);
+      const budgetResponse = await request(`/my-trip/${feed_Id}/travel-plan/${fetchedTravelPlanId}`);
       setTotalBudget(budgetResponse.data.totalExpense ?? 0);
     }
 

@@ -70,7 +70,7 @@ const DeleteBudgetModal = ({ expense, onClose, dailyPlanId, onUpdate }) => {
     
     const expenseId = expense._id;
     try {
-      const url = `${URL}/dailyPlan/${dailyPlanId}/expense/${expenseId}`;
+      const url = `${URL}/daily-plan/${dailyPlanId}/expense/${expenseId}`;
       const response = await fetch(url, {
         method: 'DELETE',
         headers: {

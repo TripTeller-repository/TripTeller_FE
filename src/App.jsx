@@ -36,14 +36,13 @@ function App() {
     ),
   );
 
-  
-  const { fetchCurrentUser } = useUserState()
+  const { fetchCurrentUser } = useUserState();
   useEffect(() => {
-    const token = localStorage.getItem('accessToken'); // 로컬스토리지에서 토큰 가져오기
-    if (token) {
+    const token = localStorage.getItem("accessToken"); // 로컬스토리지에서 토큰 가져오기
+    if (token && token !== null && token !== undefined) {
       fetchCurrentUser(); // 토큰이 있을 때만 사용자 정보 가져오기
     }
-  }, [fetchCurrentUser]);
+  }, []);
 
   return (
     <>

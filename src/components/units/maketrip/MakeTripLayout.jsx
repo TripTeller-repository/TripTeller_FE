@@ -23,7 +23,7 @@ const MakeTripLayout = () => {
   useEffect(() => {
     const fetchData = async () => {
       const response = await request(
-        `/feed/${feedId}/travelPlan/${travelPlanId}`,
+        `/my-trip/${feedId}/travel-plan/${travelPlanId}`,
       );
       const travelPlan = response.data;
       setTravelPlanData(travelPlan);
@@ -33,7 +33,7 @@ const MakeTripLayout = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await request(`/feed/${feedId}`);
+      const response = await request(`/my-trip/${feedId}`);
       const feedData = response.data[0];
       setFeedData(feedData);
     };

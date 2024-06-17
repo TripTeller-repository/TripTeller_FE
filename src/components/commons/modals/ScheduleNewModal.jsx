@@ -209,7 +209,7 @@ const ScheduleNewModal = ({ planId, onClose, onCreate }) => {
     const jwt = localStorage.getItem('accessToken');
         
     try {
-      const response = await fetch(`${URL}/dailyPlan/${planId}/dailySchedule`, {
+      const response = await fetch(`${URL}/daily-plan/${planId}/daily-schedule`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${jwt}`,

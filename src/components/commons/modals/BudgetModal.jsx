@@ -149,7 +149,7 @@ const BudgetModal = ({ expense, dailyPlanId ,onClose, onUpdate }) => {
       };
   
       const expenseId = expense._id; 
-      const response = await fetch(`${URL}/dailyPlan/${dailyPlanId}/expense/${expenseId}`, {
+      const response = await fetch(`${URL}/daily-plan/${dailyPlanId}/expense/${expenseId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -203,7 +203,7 @@ const BudgetModal = ({ expense, dailyPlanId ,onClose, onUpdate }) => {
     };
   
     try {
-      const response = await fetch(`${URL}/dailyPlan/${dailyPlanId}/expense`, {
+      const response = await fetch(`${URL}/daily-plan/${dailyPlanId}/expense`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

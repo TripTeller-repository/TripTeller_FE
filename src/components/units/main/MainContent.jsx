@@ -33,9 +33,9 @@ function MainContent() {
   const [mainNewData, setMainNewData] = useState([]);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchBestData = async () => {
       try {
-        const response = await fetch(`${URL}/feeds/order/byRecent`, {
+        const response = await fetch(`${URL}/our-trip/order-by/recent?pageNumber=1`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -45,20 +45,25 @@ function MainContent() {
           throw new Error("에러");
         }
 
-        const data = await response.json();
-        setMainBestData(data.slice(0, 3));
+        const responseData = await response.json();
+        console.log("Response for mainBestData:", responseData);
+
+        const data = responseData.feeds.data.slice(0, 3);
+        console.log("Data for mainBestData:", data);
+
+        setMainBestData(Array.isArray(data) ? data : []);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
 
-    fetchData();
+    fetchBestData();
   }, []);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchNewData = async () => {
       try {
-        const response = await fetch(`${URL}/feeds/order/byLikeCount`, {
+        const response = await fetch(`${URL}/our-trip/order-by/like-count?pageNumber=1`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -69,14 +74,19 @@ function MainContent() {
           throw new Error("에러");
         }
 
-        const data = await response.json();
-        setMainNewData(data.slice(0, 3));
+        const responseData = await response.json();
+        console.log("Response for mainNewData:", responseData);
+
+        const data = responseData.feeds.data.slice(0, 3);
+        console.log("Data for mainNewData:", data);
+
+        setMainNewData(Array.isArray(data) ? data : []);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
 
-    fetchData();
+    fetchNewData();
   }, []);
 
   return (

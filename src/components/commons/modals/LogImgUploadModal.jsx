@@ -151,7 +151,7 @@ const LogImgUploadModal = ({
         onImageUpload(dailyScheduleId, url);
         // 이미지 등록 API 호출
         const response = await fetch(
-          `${URL}/dailySchedule/${dailyScheduleId}/travelLog/image`,
+          `${URL}/daily-schedule/${dailyScheduleId}/travel-log/image`,
           {
             method: "PUT",
             headers: {
