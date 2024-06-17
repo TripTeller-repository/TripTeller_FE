@@ -157,7 +157,7 @@ function MyTripLogContent() {
               startDate={feed.startDate}
               endDate={feed.endDate}
               imageUrl={feed.thumbnailUrl}
-              href={`/my-trip?feedId=${feed.feedId}&travelPlanId=${feed.travelPlanId}`}
+              href={`/mytrip?feedId=${feed.feedId}&travelPlanId=${feed.travelPlanId}`}
             />
           ))}
         </FeedCardContainer>
