@@ -1,5 +1,6 @@
 //import URL from "/src/api/API";
-export const URL = `http://localhost:3000`;
+export const URL = `http://localhost:3000`; // => 개발용 URL
+// export const URL = `https://api.trip-teller.com`; // => 배포용 URL
 
 export function useAPI() {
   const request = async (url, method = "GET", params = undefined) => {
@@ -9,7 +10,11 @@ export function useAPI() {
       };
 
       const token = localStorage.getItem("accessToken");
-      if (token) headers.Authorization = `Bearer ${token}`;
+
+      if (token) {
+        headers.Authorization = `Bearer ${token}`;
+        // console.log("`Bearer ${token}`: ", `Bearer ${token}`);
+      }
 
       const options = {
         method,

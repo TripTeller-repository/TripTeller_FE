@@ -78,7 +78,7 @@ const LogDetailList = ({
   const handleCheckbox = async (feedId, imageUrl) => {
     try {
       // 서버에 check된 카드의 imageUrl을 전송
-      const response = await fetch(`${URL}/feed/${feedId}`, {
+      const response = await fetch(`${URL}/my-trip/${feedId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

@@ -115,7 +115,7 @@ const NewTripMakeModal = ({ closeModal }) => {
 
   const handleSubmit = async () => {
     try {
-      const feedResponse = await fetch(`${URL}/feed`, {
+      const feedResponse = await fetch(`${URL}/my-trip`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -134,7 +134,7 @@ const NewTripMakeModal = ({ closeModal }) => {
       const feedData = await feedResponse.json();
       const feedId = feedData._id;
 
-      const planResponse = await fetch(`${URL}/feed/${feedId}/travelPlan`, {
+      const planResponse = await fetch(`${URL}/my-trip/${feedId}/travel-plan`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -157,7 +157,9 @@ const NewTripMakeModal = ({ closeModal }) => {
       const travelPlanId = planData._id;
 
       closeModal();
-      navigate(`/maketrip?feedId=${feedId}&travelPlanId=${travelPlanId}&region=${region}`);
+      navigate(
+        `/maketrip?feedId=${feedId}&travelPlanId=${travelPlanId}&region=${region}`,
+      );
     } catch (error) {
       console.error("에러", error);
     }
@@ -192,7 +194,11 @@ const NewTripMakeModal = ({ closeModal }) => {
             onChange={(date) => setEndDate(date)}
             placeholderText="종료일"
             minDate={startDate}
-            maxDate={startDate ? new Date(startDate.getTime() + 15 * 24 * 60 * 60 * 1000) : null}
+            maxDate={
+              startDate
+                ? new Date(startDate.getTime() + 15 * 24 * 60 * 60 * 1000)
+                : null
+            }
           />
         </FlexContainer>
         <FlexContainer>

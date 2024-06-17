@@ -108,7 +108,7 @@ const BudgetGauge = ({ totalBudget, currentSpending, travelPlanId, feedId, onUpd
 
 
   const onUpdateTotalBudget = (updatedBudget) => {
-    fetch(`${URL}/feed/${feedId}/travelPlan/${travelPlanId}`, {
+    fetch(`${URL}/my-trip/${feedId}/travel-plan/${travelPlanId}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
