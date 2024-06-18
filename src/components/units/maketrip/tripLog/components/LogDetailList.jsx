@@ -87,16 +87,11 @@ const LogDetailList = ({
         body: JSON.stringify({ coverImage: imageUrl }),
       });
 
-      if (!response.ok) {
-        throw new Error("네트워크 응답이 올바르지 않습니다.");
-      }
-
-      // 성공적으로 변경되었음을 콘솔에 표시
-
       // 썸네일 상태 변경
       setThumbnailChecked(true);
     } catch (error) {
       console.error("데이터를 업데이트하는데 실패했습니다:", error.message);
+      throw error;
     }
   };
 

@@ -133,7 +133,8 @@ function OurtripDetailsContent() {
       const data = await response.json();
       console.log("data", data);
 
-      const travelPlanId = data.travelPlanId;
+      const travelPlanId = data[0].travelPlanId;
+      console.log("travelPlanId")
       const travelPlanResponse = await fetch(
         `${URL}/our-trip/${feedId}/travel-plan/${travelPlanId}`,
         {
