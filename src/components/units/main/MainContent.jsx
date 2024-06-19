@@ -35,12 +35,15 @@ function MainContent() {
   useEffect(() => {
     const fetchBestData = async () => {
       try {
-        const response = await fetch(`${URL}/our-trip/order-by/recent?pageNumber=1`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
+        const response = await fetch(
+          `${URL}/our-trip/order-by/like-count?pageNumber=1`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
           },
-        });
+        );
         if (!response.ok) {
           throw new Error("에러");
         }
@@ -63,12 +66,15 @@ function MainContent() {
   useEffect(() => {
     const fetchNewData = async () => {
       try {
-        const response = await fetch(`${URL}/our-trip/order-by/like-count?pageNumber=1`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
+        const response = await fetch(
+          `${URL}/our-trip/order-by/recent?pageNumber=1`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
           },
-        });
+        );
 
         if (!response.ok) {
           throw new Error("에러");
