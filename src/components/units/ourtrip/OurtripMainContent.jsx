@@ -41,43 +41,6 @@ const FeedCardContainer = styled.div`
   width: 1200px;
 `;
 
-const TabButtonContainer = styled.div`
-  display: flex;
-  height: 36px;
-  justify-content: space-between;
-
-  & > button:first-child {
-    border-right: none;
-    border-radius: 5px 0 0 5px;
-  }
-  & > button:last-child {
-    border-radius: 0 5px 5px 0;
-  }
-`;
-
-const ToggleButton = styled.button`
-  width: 80px;
-  background-color: ${({ $active }) =>
-    $active ? "var(--main2-color)" : "var(--back-color)"};
-  border: 1px solid var(--main2-color);
-  font-size: 14px;
-  cursor: pointer;
-  padding: 5px 10px;
-  font-family: "PretendardSemiBold";
-  margin-left: auto;
-  width: 120px;
-  transition-duration: 0.2s;
-
-  &:hover {
-    color: var(--main-color);
-  }
-
-  &:active {
-    background-color: var(--main-color);
-    color: var(--white-color);
-  }
-`;
-
 const LoadingIndicator = styled.div`
   height: 100px;
   display: flex;
@@ -109,8 +72,6 @@ const LoadingIndicator = styled.div`
 
 const OurTripMainContent = () => {
   const [ourTripData, setOurTripData] = useState([]);
-  const [sortBy, setSortBy] = useState("recent");
-  const [activeButton, setActiveButton] = useState("recent");
   const [pageNumber, setPageNumber] = useState(1);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
@@ -120,7 +81,7 @@ const OurTripMainContent = () => {
 
   const fetchNewData = async () => {
     try {
-      const url = `${URL}/our-trip/order-by/${sortBy === "recent" ? "recent" : "like-count"}?pageNumber=${pageNumber}`;
+      const url = `${URL}/our-trip/order-by/recent?pageNumber=${pageNumber}`;
       const response = await fetch(url, {
         method: "GET",
         headers: {
@@ -192,7 +153,7 @@ const OurTripMainContent = () => {
     setPageNumber(1);
     setOurTripData([]);
     setLoading(true);
-  }, [sortBy]);
+  }, []);
 
   return (
     <>
@@ -200,26 +161,6 @@ const OurTripMainContent = () => {
       <Container>
         <HorizontalContainer>
           <Title>여행 족보</Title>
-          <TabButtonContainer>
-            <ToggleButton
-              $active={activeButton === "recent"}
-              onClick={() => {
-                setSortBy("recent");
-                setActiveButton("recent");
-              }}
-            >
-              최신순
-            </ToggleButton>
-            <ToggleButton
-              $active={activeButton === "popular"}
-              onClick={() => {
-                setSortBy("like-count");
-                setActiveButton("popular");
-              }}
-            >
-              인기순
-            </ToggleButton>
-          </TabButtonContainer>
         </HorizontalContainer>
         <FeedCardContainer>
           {ourTripData.map((feed) => (
