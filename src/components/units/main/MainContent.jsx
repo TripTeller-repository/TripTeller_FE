@@ -98,20 +98,6 @@ function MainContent() {
   return (
     <Container>
       <MainBanner />
-      <Title>Best Trip</Title>
-
-      <FeedCardContainer>
-        {mainBestData.map((feed) => (
-          <OurTripFeedCard
-            key={feed.feedId}
-            title={feed.title}
-            startDate={feed.startDate}
-            endDate={feed.endDate}
-            imageUrl={feed.thumbnailUrl}
-            href={`/ourtrip/details?feedId=${feed.feedId}&travelPlanId=${feed.travelPlanId}`}
-          />
-        ))}
-      </FeedCardContainer>
 
       <Title>New Trip</Title>
 
