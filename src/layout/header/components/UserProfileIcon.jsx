@@ -14,12 +14,21 @@ const UserProfileIcon = ({ openModal }) => {
   const token = localStorage.getItem("accessToken");
   const { user } = useUserState();
 
+  const handleOnclick = () => {
+    if (user?.profileImage) {
+      openModal();
+    } else {
+      window.location.href = "/login";
+    }
+  };
+
   return (
     <>
       <StyledIcon
-        src={token ? user?.profileImage : MypageIcon}
+        /*user의 profileImage가 null 또는 undefined인 경우 MypageIcon이 뜨도록 함.*/
+        src={token ? user?.profileImage ?? MypageIcon : MypageIcon}
         alt="UserProfile"
-        onClick={openModal}
+        onClick={handleOnclick}
       />
     </>
   );
