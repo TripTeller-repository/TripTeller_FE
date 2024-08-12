@@ -170,8 +170,6 @@ const OurTripMainContent = () => {
               startDate={feed.startDate}
               endDate={feed.endDate}
               imageUrl={feed.thumbnailUrl}
-              likeCount={feed.likeCount}
-              initialScrapState={feed.isScrapped}
               region={feed.region}
               href={`/ourtrip/details?feedId=${feed.feedId}&travelPlanId=${feed.travelPlanId}`}
             />
