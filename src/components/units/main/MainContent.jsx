@@ -29,39 +29,7 @@ const FeedCardContainer = styled.div`
 `;
 
 function MainContent() {
-  const [mainBestData, setMainBestData] = useState([]);
   const [mainNewData, setMainNewData] = useState([]);
-
-  useEffect(() => {
-    const fetchBestData = async () => {
-      try {
-        const response = await fetch(
-          `${URL}/our-trip/order-by/like-count?pageNumber=1`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          },
-        );
-        if (!response.ok) {
-          throw new Error("에러");
-        }
-
-        const responseData = await response.json();
-        console.log("Response for mainBestData:", responseData);
-
-        const data = responseData.feeds.data.slice(0, 3);
-        console.log("Data for mainBestData:", data);
-
-        setMainBestData(Array.isArray(data) ? data : []);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchBestData();
-  }, []);
 
   useEffect(() => {
     const fetchNewData = async () => {
@@ -109,6 +77,7 @@ function MainContent() {
             startDate={feed.startDate}
             endDate={feed.endDate}
             imageUrl={feed.thumbnailUrl}
+            region={feed.region}
             href={`/ourtrip/details?feedId=${feed.feedId}&travelPlanId=${feed.travelPlanId}`}
           />
         ))}
