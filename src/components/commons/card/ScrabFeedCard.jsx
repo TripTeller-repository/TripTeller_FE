@@ -3,6 +3,8 @@ import styled from "styled-components";
 import HeartIcon from "/icon/heart_on.svg";
 import EmptyHeartIcon from "/icon/heart_off.svg";
 import dayjs from "dayjs";
+import timezone from "dayjs/plugin/timezone";
+dayjs.extend(timezone);
 
 const CardContainer = styled.div`
   display: flex;
@@ -62,7 +64,7 @@ function ScrabFeedCard({ imageUrl, title, startDate, endDate }) {
   };
 
   const formattedDate = (date) => {
-    return dayjs(date).locale("ko").format("YYYY.MM.DD");
+    return dayjs(date).tz("Asia/Seoul").locale("ko").format("YYYY.MM.DD");
   };
 
   return (

@@ -1,5 +1,7 @@
 import styled from "styled-components";
 import dayjs from "dayjs";
+import timezone from "dayjs/plugin/timezone";
+dayjs.extend(timezone);
 
 const flexColumn = `
   display: flex;
@@ -60,7 +62,7 @@ const ButtonContainer = styled.div`
 `;
 // UTC 시간을 한국 시간 포맷으로 변경
 const formattedTime = (time) => {
-  return dayjs(time).locale("ko").format("A hh:mm");
+  return dayjs(time).tz("Asia/Seoul").locale("ko").format("A hh:mm");
 };
 
 const ScheduleCard = ({

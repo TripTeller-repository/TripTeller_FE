@@ -3,6 +3,8 @@ import styled from "styled-components";
 import BudgetModal from "/src/components/commons/modals/BudgetModal";
 import DeleteBudgetModal from "/src/components/commons/modals/DeleteBudgetModal";
 import dayjs from "dayjs";
+import timezone from "dayjs/plugin/timezone";
+dayjs.extend(timezone);
 
 const SectionContainer = styled.div`
   width: 880px;
@@ -166,7 +168,7 @@ const BudgetSection = ({ dailyPlan, onUpdateExpenses }) => {
       case 'STRING':
         return dailyPlan.dateString;
       case 'DATE':
-        return dayjs(dailyPlan.date).format("MM월 DD일");
+        return dayjs(dailyPlan.date).tz('Asia/Seoul').format("MM월 DD일");
       default:
         return '날짜 없음';
     }

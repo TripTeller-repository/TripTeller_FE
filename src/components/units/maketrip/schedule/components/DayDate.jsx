@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ko'; // 한국어 지원
 import ScheduleDeleteModal from "/src/components/commons/modals/ScheduleDeleteModal";
+import timezone from "dayjs/plugin/timezone";
+dayjs.extend(timezone);
 
 const DayContainer = styled.div`
   display: flex;
@@ -50,7 +52,7 @@ const DateText = styled.span`
 `;
 
 
-dayjs.locale('ko'); // 한국어 설정
+dayjs.tz("Asia/Seoul").locale('ko'); // 한국어 설정
 
 // DayDate 컴포넌트화, props로 day와 date를 받습니다.
 const DayDateCard = ({ day, date, onDelete }) => {
@@ -61,7 +63,7 @@ const DayDateCard = ({ day, date, onDelete }) => {
   const handleCloseModal = () => setIsModalOpen(false);
 
   // 날짜 포맷팅, dayjs 라이브러리 사용
-  const formattedDate = dayjs(date).format('M.D(dd)');
+  const formattedDate = dayjs(date).tz("Asia/Seoul").format('M.D(dd)');
 
   // 함수 컴포넌트의 반환 부분
   return (
