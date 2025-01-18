@@ -1,4 +1,4 @@
-export const URL = import.meta.env.VITE_API_URL || `http://localhost:3000`;
+export const URL = import.meta.env.VITE_API_URL || `https://api-trip`;
 
 export function useAPI() {
   const request = async (url, method = "GET", params = undefined) => {
