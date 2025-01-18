@@ -212,7 +212,8 @@ const ScheduleEditModal = ({
     const normalizedHour = (parseInt(hour) % 12) + isAMOffset;
 
     const formattedTime = dayjs(`${currentDate} ${normalizedHour}:${minute}`)
-      .tz("Asia/Seoul")
+      .utc()
+      // .tz("Asia/Seoul")
       .format("YYYY-MM-DD HH:mm"); // 사용자가 선택한 시간 포맷팅
 
     try {
