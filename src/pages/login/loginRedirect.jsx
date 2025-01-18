@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import "./redirectPage.css";
 
 const RedirectPage = () => {
   const navigate = useNavigate();
@@ -30,9 +31,10 @@ const RedirectPage = () => {
   }, [navigate]);
 
   return (
-    <>
-      <div>로그인 중입니다.</div>
-    </>
+    <div className="loading-container">
+      <div className="loading-bar"></div>
+      <p>로그인 중입니다...</p>
+    </div>
   );
 };
 
