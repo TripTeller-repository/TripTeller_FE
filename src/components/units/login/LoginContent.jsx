@@ -1,6 +1,7 @@
 import SocialLoginButton from "/src/components/units/login/components/SocialLoginButton";
 import styled from "styled-components";
 import LoginForm from "/src/components/units/login/components/LoginForm";
+import { URL } from "/src/api/API";
 
 const CenteredContainer = styled.div`
   height: 800px;
@@ -53,8 +54,7 @@ const Title = styled.div`
 const LoginContent = () => {
   const onClick = () => {
     window.Kakao.Auth.authorize({
-      redirectUri: "http://localhost:3000/auth/sign-in/kakao", // 개발
-      // redirectUri: "https://api.trip-teller.com/auth/sign-in/kakao", // 배포
+      redirectUri: `${URL}/auth/sign-in/kakao`,
     });
   };
 

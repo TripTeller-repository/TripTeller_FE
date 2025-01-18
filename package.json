@@ -1,6 +1,6 @@
 {
   "proxy": "http://localhost:3000",
-  "name": "test2",
+  "name": "trip-teller-fe",
   "private": true,
   "version": "0.0.0",
   "type": "module",
