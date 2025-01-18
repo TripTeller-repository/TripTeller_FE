@@ -105,9 +105,7 @@ function TripLogContent() {
           }),
         },
       );
-      console.log("dailyScheduleId: ", dailyScheduleId);
-      console.log("newText: ", newText);
-      console.log("response", response);
+
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(

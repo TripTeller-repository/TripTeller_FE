@@ -95,7 +95,6 @@ const OurTripMainContent = () => {
       }
 
       const data = await response.json();
-      console.log(data); // 응답 데이터 로그
 
       if (!data.feeds || !Array.isArray(data.feeds.data)) {
         throw new Error("API 응답이 올바르지 않습니다.");

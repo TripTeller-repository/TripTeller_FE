@@ -80,12 +80,15 @@ function MyTripLogContent() {
       );
 
       if (!response.ok) {
+        if (response.status === 401 || response.status === 403) {
+          alert("로그인이 필요합니다.");
+          window.location.replace("/login");
+          return;
+        }
         throw new Error("데이터를 불러오는 데 실패했습니다.");
       }
 
       const data = await response.json();
-      console.log(data);
-
       if (!data.feeds || !Array.isArray(data.feeds.data)) {
         throw new Error("API 응답이 올바르지 않습니다.");
       }
@@ -99,17 +102,38 @@ function MyTripLogContent() {
         return [...filteredData, ...data.feeds.data];
       });
 
-      setHasMore(data.feeds.data.length > 0);
+      // 더 이상 불러올 데이터가 없을 경우 hasMore을 false로 설정
+      if (!data.feeds.data || data.feeds.data.length === 0) {
+        setHasMore(false);
+      }
 
-      // 로딩 아이콘 2초 동안 출력
+      // 로딩 아이콘 1초 동안 출력
       setTimeout(() => {
         setLoading(false);
-      }, 2000);
+      }, 1000);
     } catch (error) {
-      console.error("데이터를 불러오는 도중 오류가 발생했습니다:", error);
+      console.error("게시물 로딩 API 요청 실패", error.message);
       setLoading(false);
+
+      if (!accessToken) {
+        alert("로그인이 필요합니다.");
+        window.location.replace("/login");
+      } else {
+        alert("데이터를 불러오는 중 문제가 발생했습니다.");
+        window.location.replace("/");
+      }
     }
   };
+
+  useEffect(() => {
+    const accessToken = localStorage.getItem("accessToken");
+    if (!accessToken) {
+      alert("로그인이 필요합니다.");
+      window.location.replace("/login");
+      return;
+    }
+    fetchNewData();
+  }, []);
 
   useEffect(() => {
     const options = {
@@ -130,21 +154,18 @@ function MyTripLogContent() {
 
     return () => {
       if (loader.current) {
-        observer.unobserve(loader.current);
+        observer.disconnect();
       }
     };
   }, [hasMore, loading]);
 
   useEffect(() => {
-    if (loading) {
-      fetchNewData();
-      setPageNumber((prevPageNumber) => prevPageNumber + 1);
+    if (loading && hasMore) {
+      fetchNewData().then(() => {
+        setPageNumber((prevPageNumber) => prevPageNumber + 1);
+      });
     }
-  }, [loading]);
-
-  useEffect(() => {
-    fetchNewData();
-  }, []);
+  }, [loading, hasMore]);
 
   return (
     <Container>

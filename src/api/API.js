@@ -12,7 +12,6 @@ export function useAPI() {
 
       if (token) {
         headers.Authorization = `Bearer ${token}`;
-        console.log("`Bearer ${token}`: ", `Bearer ${token}`);
       }
 
       const options = {
