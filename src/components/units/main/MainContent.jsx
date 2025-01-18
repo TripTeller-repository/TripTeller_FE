@@ -49,10 +49,10 @@ function MainContent() {
         }
 
         const responseData = await response.json();
-        console.log("Response for mainNewData:", responseData);
+        // console.log("Response for mainNewData:", responseData);
 
         const data = responseData.feeds.data.slice(0, 6);
-        console.log("Data for mainNewData:", data);
+        // console.log("Data for mainNewData:", data);
 
         setMainNewData(Array.isArray(data) ? data : []);
       } catch (error) {

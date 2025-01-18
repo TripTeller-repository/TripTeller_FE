@@ -125,13 +125,13 @@ function OurtripDetailsContent() {
       });
       if (!response.ok) {
         const errorData = await response.json();
-        console.log("errorData", errorData);
+        // console.log("errorData", errorData);
         throw new Error(
           errorData.message || "네트워크 응답이 올바르지 않습니다.",
         );
       }
       const data = await response.json();
-      console.log("data", data);
+      // console.log("data", data);
 
       const travelPlanId = data.travelPlanId;
       const travelPlanResponse = await fetch(
@@ -144,7 +144,7 @@ function OurtripDetailsContent() {
         },
       );
 
-      console.log("travelPlanResponse", travelPlanResponse);
+      // console.log("travelPlanResponse", travelPlanResponse);
       setFeedData(data[0]);
       const dailyPlans = data[0].travelPlan.dailyPlans.filter(
         (d) => d.dateType === "DATE",
@@ -190,7 +190,7 @@ function OurtripDetailsContent() {
       await navigator.clipboard.writeText(currentUrl);
       alert(`클립보드에 링크가 복사되었어요.\n${currentUrl}`);
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   };
 
