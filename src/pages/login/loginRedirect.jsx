@@ -1,37 +1,33 @@
 import React, { useEffect } from "react";
-import { URL } from "/src/api/API";
+import { useNavigate } from "react-router-dom";
 
 const RedirectPage = () => {
-  const code = new URLSearchParams(window.location.search).get("code");
+  const navigate = useNavigate();
 
   useEffect(() => {
-    async function signInByCode() {
+    {
       try {
-        const response = await fetch(`${URL}/auth/sign-in/kakao`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-          },
-          body: JSON.stringify({ code }),
-          credentials: "include", // 쿠키 포함
-        });
-        const data = await response.json();
+        const accessToken = document.cookie
+          .split("; ")
+          .find((row) => row.startsWith("accessToken="))
+          ?.split("=")[1];
 
         // 토큰 있을 때만 localStorage에 넣어주기
-        if (data.accessToken) {
-          localStorage.setItem("accessToken", data.accessToken);
+        if (accessToken) {
+          localStorage.setItem("accessToken", accessToken);
+          document.cookie =
+            "accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
         } else {
-          console.log("토큰이 없어서 카카오 로그인 실패");
+          console.error("카카오 로그인 중 액세스 토큰을 찾을 수 없습니다.");
         }
-        window.location.href = "/";
       } catch (error) {
-        console.error("SignIn error:", error);
+        console.error("Kakao SignIn error:", error);
       }
     }
 
-    signInByCode();
-  }, []);
+    // 로그인 실패/성공 여부와 무관하게 메인 화면으로 리다이렉트
+    navigate("/");
+  }, [navigate]);
 
   return (
     <>

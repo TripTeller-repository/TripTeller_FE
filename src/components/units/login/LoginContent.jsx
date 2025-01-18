@@ -53,8 +53,8 @@ const Title = styled.div`
 const LoginContent = () => {
   const onClick = () => {
     window.Kakao.Auth.authorize({
-      // redirectUri: "http://localhost:5173/login/redirect", // 개발
-      redirectUri: "https://www.trip-teller.com/login/redirect", // 배포
+      redirectUri: "http://localhost:3000/auth/sign-in/kakao", // 개발
+      // redirectUri: "https://api.trip-teller.com/auth/sign-in/kakao", // 배포
     });
   };
 
