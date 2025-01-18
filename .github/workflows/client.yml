@@ -20,8 +20,7 @@ jobs:
       # npm package cache 사용하기 : https://github.com/actions/cache/blob/main/examples.md#node---npm
       - name: Get npm cache directory # npm 캐시 디렉토리를 얻는 단계
         id: npm-cache-dir # 이 단계의 ID 설정
-        run: |
-          echo "::set-output name=dir::$(npm config get cache)" # npm 캐시 디렉토리를 출력하여 변수로 설정
+        run: echo "dir=$(npm config get cache)" >> $GITHUB_OUTPUT # npm 캐시 디렉토리를 출력하여 변수로 설정
 
       - uses: actions/cache@v3 # npm 캐시를 사용하는 액션
         id: npm-cache # 이 단계의 ID 설정
@@ -31,6 +30,9 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node- # 캐시를 복원할 키 설정
 
+      - name: Set up .env.production
+        run: echo "VITE_API_URL=${{ secrets.PROD_API_URL }}" > .env
+
       - name: install npm dependencies # npm 의존성 설치 단계
         run: npm install # npm을 사용하여 의존성 설치
 
@@ -39,7 +41,7 @@ jobs:
 
       # aws user 연결
       - name: Configure AWS credentials # AWS 자격 증명을 구성하는 단계
-        uses: aws-actions/configure-aws-credentials@v1 # AWS 자격 증명 구성 액션 사용
+        uses: aws-actions/configure-aws-credentials@v2 # AWS 자격 증명 구성 액션 사용
         with:
           aws-access-key-id: ${{ secrets.AWS_S3_ACCESS_KEY_ID }} # AWS 액세스 키 ID를 시크릿에서 가져오기
           aws-secret-access-key: ${{ secrets.AWS_S3_SECRET_ACCESS_KEY }} # AWS 시크릿 액세스 키를 시크릿에서 가져오기

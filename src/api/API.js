@@ -1,6 +1,4 @@
-//import URL from "/src/api/API";
-export const URL = `http://localhost:3000`; // => 개발용 URL
-// export const URL = `https://api.trip-teller.com`; // => 배포용 URL
+export const URL = import.meta.env.VITE_API_URL || `http://localhost:3000`;
 
 export function useAPI() {
   const request = async (url, method = "GET", params = undefined) => {
