@@ -1,4 +1,5 @@
-export const URL = import.meta.env.VITE_API_URL || `https://api-trip`;
+export const URL =
+  import.meta.env.VITE_API_URL || `https://api.trip-teller.com`;
 
 export function useAPI() {
   const request = async (url, method = "GET", params = undefined) => {
