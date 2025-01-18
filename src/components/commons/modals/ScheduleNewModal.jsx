@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import KakaoMapModal from "/src/components/commons/modals/KakaoMapModal";
-import dayjs from 'dayjs'; // Day.js 라이브러리
+import dayjs from "dayjs"; // Day.js 라이브러리
+import timezone from "dayjs/plugin/timezone";
+dayjs.extend(timezone);
 import { URL } from "/src/api/API";
 
 const ModalOverlay = styled.div`
@@ -37,21 +39,23 @@ const ModalContent = styled.div`
     justify-content: center;
     margin-bottom: 48px;
   }
-`
+`;
 
 // 오전,오후 컨테이너
 const AmPmContainer = styled.div`
   display: flex;
-  align-items: flex-start;  
+  align-items: flex-start;
   justify-content: space-between;
   width: 175px;
   margin-right: 50px;
-`
+`;
 
 // 오전,오후 버튼
 const AmPmButton = styled.button`
-  background-color: ${({ selected }) => (selected ? "var(--main-color)" : "var(--main2-color)")};
-  color: ${({ selected }) => (selected ? "var(--white-color)" : "var(--white-color)")};
+  background-color: ${({ selected }) =>
+    selected ? "var(--main-color)" : "var(--main2-color)"};
+  color: ${({ selected }) =>
+    selected ? "var(--white-color)" : "var(--white-color)"};
   border: none;
   border-radius: 4px;
   width: 85px;
@@ -90,19 +94,19 @@ const LocationContainer = styled.div`
 const TimeContainer = styled.div`
   display: flex;
   align-items: center;
-`
+`;
 
 const MemoContainer = styled.div`
   display: flex;
   align-items: center;
-`
+`;
 
 const TimeSelecContainer = styled.div`
   display: flex;
-  align-items: center;  
+  align-items: center;
   justify-content: space-between;
   width: 175px;
-`
+`;
 
 // 장소 검색 버튼
 const SearchButton = styled.button`
@@ -164,24 +168,24 @@ const TimeSelector = styled.select`
 `;
 
 const ScheduleNewModal = ({ planId, onClose, onCreate }) => {
-  const [isAM, setIsAM] = useState(true);  
+  const [isAM, setIsAM] = useState(true);
   const [location, setLocation] = useState(""); // 장소 상태
   const [memo, setMemo] = useState(""); // 메모 상태
   const [showMapModal, setShowMapModal] = useState(false);
   // 시간과 분 상태
-  const [hour, setHour] = useState('12');  // Default hour set to 12
-  const [minute, setMinute] = useState('00');  // Default minute set to 00
+  const [hour, setHour] = useState("12"); // Default hour set to 12
+  const [minute, setMinute] = useState("00"); // Default minute set to 00
 
   // 장소검색하기버튼
   const handleLocationSearch = () => {
     setShowMapModal(true); // 지도를 모달 열기
   };
-  
+
   // 장소검색한 명칭 및 주소 저장
   const handleLocationSelect = (selectedLocation) => {
     setLocation(selectedLocation); // 지도에서 선택한 장소를 상태에 저장
     setShowMapModal(false); // 지도 모달 닫기
-};
+  };
 
   // 메모 입력 상태 저장
   const handleMemoChange = (event) => {
@@ -193,33 +197,37 @@ const ScheduleNewModal = ({ planId, onClose, onCreate }) => {
   // 생성하기버튼
   const handleCreate = async () => {
     // onCreate 함수를 사용하여 새로운 일정 생성
-    const currentDate = dayjs().format('YYYY-MM-DD');
+    const currentDate = dayjs().tz("Asia/Seoul").format("YYYY-MM-DD");
     const isAMOffset = isAM ? 0 : 12; // 오전일 경우 0, 오후일 경우 12를 더합니다.
-    const normalizedHour = parseInt(hour) % 12 + isAMOffset; // 시간을 24시간 형식으로 변환
+    const normalizedHour = (parseInt(hour) % 12) + isAMOffset; // 시간을 24시간 형식으로 변환
 
     const formattedTime = dayjs(`${currentDate} ${normalizedHour}:${minute}`)
-  .format('YYYY-MM-DD HH:mm'); // 원하는 포맷으로 변환 
+      .tz("Asia/Seoul")
+      .format("YYYY-MM-DD HH:mm"); // 원하는 포맷으로 변환
 
-  const newSchedule = {
-    location: location,
-    time: formattedTime,
-    memo: memo,
-  };
+    const newSchedule = {
+      location: location,
+      time: formattedTime,
+      memo: memo,
+    };
 
-    const jwt = localStorage.getItem('accessToken');
-        
+    const jwt = localStorage.getItem("accessToken");
+
     try {
-      const response = await fetch(`${URL}/daily-plan/${planId}/daily-schedule`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${jwt}`,
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        `${URL}/daily-plan/${planId}/daily-schedule`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newSchedule),
         },
-        body: JSON.stringify(newSchedule),
-      });
+      );
 
       if (!response.ok) {
-        throw new Error('Failed to create schedule');
+        throw new Error("Failed to create schedule");
       }
 
       const data = await response.json();
@@ -227,10 +235,9 @@ const ScheduleNewModal = ({ planId, onClose, onCreate }) => {
 
       onClose(); // Close the modal
     } catch (error) {
-      console.error('Error creating schedule:', error);
+      console.error("Error creating schedule:", error);
     }
   };
-
 
   return (
     <ModalOverlay onMouseDown={onClose}>
@@ -238,24 +245,50 @@ const ScheduleNewModal = ({ planId, onClose, onCreate }) => {
         <h1>세부 일정 생성</h1>
         <InputContainer>
           <LocationContainer>
-          <label>장소</label>
-          <InputField placeholder="장소를 검색해주세요" value={location} onChange={(e) => setLocation(e.target.value)} />
-          <SearchButton onClick={handleLocationSearch}>장소 검색</SearchButton> {/* 새로운 검색 버튼 */}
+            <label>장소</label>
+            <InputField
+              placeholder="장소를 검색해주세요"
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
+            />
+            <SearchButton onClick={handleLocationSearch}>
+              장소 검색
+            </SearchButton>{" "}
+            {/* 새로운 검색 버튼 */}
           </LocationContainer>
-          {showMapModal && <KakaoMapModal onClose={() => setShowMapModal(false)} onSelectLocation={handleLocationSelect} />}
+          {showMapModal && (
+            <KakaoMapModal
+              onClose={() => setShowMapModal(false)}
+              onSelectLocation={handleLocationSelect}
+            />
+          )}
 
           <TimeContainer>
             <label>시작</label>
             <AmPmContainer>
-              <AmPmButton selected={isAM} onClick={() => setIsAM(true)}>오전</AmPmButton>
-              <AmPmButton selected={!isAM} onClick={() => setIsAM(false)}>오후</AmPmButton>
+              <AmPmButton selected={isAM} onClick={() => setIsAM(true)}>
+                오전
+              </AmPmButton>
+              <AmPmButton selected={!isAM} onClick={() => setIsAM(false)}>
+                오후
+              </AmPmButton>
             </AmPmContainer>
             <TimeSelecContainer>
-              <TimeSelector value={hour} onChange={e => setHour(e.target.value)}>
-              {Array.from({ length: 12 }, (_, i) => <option key={i} value={i + 1}>{`${i + 1} 시`}</option>)}
+              <TimeSelector
+                value={hour}
+                onChange={(e) => setHour(e.target.value)}
+              >
+                {Array.from({ length: 12 }, (_, i) => (
+                  <option key={i} value={i + 1}>{`${i + 1} 시`}</option>
+                ))}
               </TimeSelector>
-              <TimeSelector value={minute} onChange={e => setMinute(e.target.value)}>
-              {Array.from({ length: 60 }, (_, i) => <option key={i} value={i}>{`${i} 분`}</option>)}
+              <TimeSelector
+                value={minute}
+                onChange={(e) => setMinute(e.target.value)}
+              >
+                {Array.from({ length: 60 }, (_, i) => (
+                  <option key={i} value={i}>{`${i} 분`}</option>
+                ))}
               </TimeSelector>
             </TimeSelecContainer>
           </TimeContainer>
@@ -263,19 +296,19 @@ const ScheduleNewModal = ({ planId, onClose, onCreate }) => {
           <MemoContainer>
             <label>메모</label>
             <InputMemo
-            placeholder="(선택) 메모를 15자 이내 입력해주세요."
-            type='text' 
-            maxLength='14' 
-            value={memo}
-            onChange={handleMemoChange}
-          />
-          </MemoContainer>         
+              placeholder="(선택) 메모를 15자 이내 입력해주세요."
+              type="text"
+              maxLength="14"
+              value={memo}
+              onChange={handleMemoChange}
+            />
+          </MemoContainer>
         </InputContainer>
 
         <SubmitButton onClick={handleCreate}>생성하기</SubmitButton>
       </ModalContent>
     </ModalOverlay>
   );
-}
+};
 
 export default ScheduleNewModal;

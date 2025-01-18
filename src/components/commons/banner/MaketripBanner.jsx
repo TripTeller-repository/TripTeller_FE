@@ -1,5 +1,7 @@
 import styled from "styled-components";
 import dayjs from "dayjs";
+import timezone from "dayjs/plugin/timezone";
+dayjs.extend(timezone);
 
 const coverImage = "/img/banner_maketrip.jpg";
 
@@ -44,7 +46,7 @@ const Date = styled.p`
 
 // UTC 시간을 날짜 포맷으로 변경
 const formattedDate = (date) => {
-  return dayjs(date).locale("ko").format("YYYY.MM.DD");
+  return dayjs(date).tz("Asia/Seoul").locale("ko").format("YYYY.MM.DD");
 };
 
 // Mytrip-일정생성 페이지 공통 Banner구현

@@ -186,7 +186,7 @@ const NewTripMakeModal = ({ closeModal }) => {
             selected={startDate}
             onChange={(date) => setStartDate(date)}
             placeholderText="시작일"
-            minDate={new Date()}
+            // minDate={new Date()} (과거 날짜도 입력 가능하게 함)
           />
           <Separator>~</Separator>
           <DayEndInput
