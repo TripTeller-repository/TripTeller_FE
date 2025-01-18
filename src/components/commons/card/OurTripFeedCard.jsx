@@ -1,7 +1,11 @@
 import React from "react";
 import styled from "styled-components";
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
+import "dayjs/locale/ko";
+
+dayjs.extend(utc);
 dayjs.extend(timezone);
 
 const CardContainer = styled.div`
@@ -65,7 +69,14 @@ const Region = styled.div`
   text-align: start;
 `;
 
-function OurTripFeedCard({ imageUrl, title, startDate, endDate, region, href }) {
+function OurTripFeedCard({
+  imageUrl,
+  title,
+  startDate,
+  endDate,
+  region,
+  href,
+}) {
   const formattedDate = (date) => {
     return dayjs(date).tz("Asia/Seoul").locale("ko").format("YYYY.MM.DD");
   };

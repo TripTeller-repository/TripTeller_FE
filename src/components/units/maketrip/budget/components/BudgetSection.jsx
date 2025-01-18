@@ -3,7 +3,9 @@ import styled from "styled-components";
 import BudgetModal from "/src/components/commons/modals/BudgetModal";
 import DeleteBudgetModal from "/src/components/commons/modals/DeleteBudgetModal";
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
+dayjs.extend(utc);
 dayjs.extend(timezone);
 
 const SectionContainer = styled.div`
@@ -138,9 +140,10 @@ const BudgetSection = ({ dailyPlan, onUpdateExpenses }) => {
   const handleExpenseChange = (expense) => {
     setExpenses((prevExpenses) => {
       const index = prevExpenses.findIndex((exp) => exp._id === expense._id);
-      const newExpenses = index !== -1 
-        ? prevExpenses.map((exp) => (exp._id === expense._id ? expense : exp))
-        : [...prevExpenses, expense];
+      const newExpenses =
+        index !== -1
+          ? prevExpenses.map((exp) => (exp._id === expense._id ? expense : exp))
+          : [...prevExpenses, expense];
       onUpdateExpenses(newExpenses);
       return newExpenses;
     });
@@ -159,21 +162,19 @@ const BudgetSection = ({ dailyPlan, onUpdateExpenses }) => {
   }, [expenses]);
 
   useEffect(() => {
-    setExpenses(dailyPlan.expenses)
-  }, [])
-
+    setExpenses(dailyPlan.expenses);
+  }, []);
 
   const date = useMemo(() => {
     switch (dailyPlan.dateType) {
-      case 'STRING':
+      case "STRING":
         return dailyPlan.dateString;
-      case 'DATE':
-        return dayjs(dailyPlan.date).tz('Asia/Seoul').format("MM월 DD일");
+      case "DATE":
+        return dayjs(dailyPlan.date).tz("Asia/Seoul").format("MM월 DD일");
       default:
-        return '날짜 없음';
+        return "날짜 없음";
     }
-  }, [dailyPlan])
-
+  }, [dailyPlan]);
 
   return (
     <SectionContainer>
@@ -185,7 +186,10 @@ const BudgetSection = ({ dailyPlan, onUpdateExpenses }) => {
         {expenses.map((expense) => (
           <ExpenseItemContainer key={expense._id}>
             <ExpenseInfo>
-              <img src={categoryImages[expense.expenseCategory]} alt="카테고리" />
+              <img
+                src={categoryImages[expense.expenseCategory]}
+                alt="카테고리"
+              />
               <ExpenseText>
                 {expense.title}
                 <p>{expense.expenseMemo}</p>
@@ -218,7 +222,6 @@ const BudgetSection = ({ dailyPlan, onUpdateExpenses }) => {
           dailyPlanId={dailyPlan._id}
           onClose={closeModal}
           onUpdate={handleExpenseChange}
-          
         />
       )}
 

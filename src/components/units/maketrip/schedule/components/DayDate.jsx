@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import dayjs from 'dayjs';
-import 'dayjs/locale/ko'; // 한국어 지원
-import ScheduleDeleteModal from "/src/components/commons/modals/ScheduleDeleteModal";
+import React, { useState } from "react";
+import styled from "styled-components";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
+import "dayjs/locale/ko"; // 한국어 지원
+import ScheduleDeleteModal from "/src/components/commons/modals/ScheduleDeleteModal";
+
+dayjs.extend(utc);
 dayjs.extend(timezone);
 
 const DayContainer = styled.div`
@@ -41,7 +44,7 @@ const DayTitle = styled.h3`
   color: var(--white-color); // 폰트 색상
   font-size: 38px; // 폰트 사이즈
   font-family: "PretendardSemiBold"; // 폰트 굵기
-  margin: 0;  
+  margin: 0;
 `;
 
 const DateText = styled.span`
@@ -51,19 +54,18 @@ const DateText = styled.span`
   font-family: "PretendardSemiBold"; // 폰트 굵기
 `;
 
-
-dayjs.tz("Asia/Seoul").locale('ko'); // 한국어 설정
-
 // DayDate 컴포넌트화, props로 day와 date를 받습니다.
 const DayDateCard = ({ day, date, onDelete }) => {
   // 모달의 상태 관리를 위한 useState
   const [isModalOpen, setIsModalOpen] = useState(false);
-  
+
   // 모달을 닫는 함수
   const handleCloseModal = () => setIsModalOpen(false);
 
   // 날짜 포맷팅, dayjs 라이브러리 사용
-  const formattedDate = dayjs(date).tz("Asia/Seoul").format('M.D(dd)');
+  const formattedDate = dayjs(date).isValid()
+    ? dayjs(date).tz("Asia/Seoul").format("M.D(dd)")
+    : "유효하지 않은 날짜";
 
   // 함수 컴포넌트의 반환 부분
   return (
@@ -76,13 +78,15 @@ const DayDateCard = ({ day, date, onDelete }) => {
         {/* TrashIcon 클릭 시 handleOpenModal 함수 호출로 모달을 여는 역할 */}
       </DayHeaderContainer>
       {/* 모달 상태에 따라 ScheduleDeleteModal 컴포넌트 표시 */}
-      {isModalOpen && <ScheduleDeleteModal
-        onClose={handleCloseModal}
-        onDelete={() => {
-          onDelete(day); // day가 삭제하고자 하는 날짜의 ID입니다.
-          handleCloseModal(); // 모달 닫기
-        }}
-      />}
+      {isModalOpen && (
+        <ScheduleDeleteModal
+          onClose={handleCloseModal}
+          onDelete={() => {
+            onDelete(day); // day가 삭제하고자 하는 날짜의 ID입니다.
+            handleCloseModal(); // 모달 닫기
+          }}
+        />
+      )}
     </DayContainer>
   );
 };
