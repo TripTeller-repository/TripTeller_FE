@@ -42,6 +42,13 @@ const ContentContainer = styled.div`
   top: 0; // 상단 가장자리에 정렬
 `;
 
+const convertToKST = (utcDateString) => {
+  const date = new Date(utcDateString); // 서버로부터 받은 UTC 형식의 날짜를 Date 객체로 변환
+  const kstOffset = 9 * 60; // UTC+9, 분 단위로 변환
+  const localTime = new Date(date.getTime() + kstOffset * 60 * 1000); // KST로 변환
+  return localTime;
+};
+
 const ScheduleContent = () => {
   const [dailyPlans, setDailyPlans] = useState([]); // 일정받아오는
   const [travelPlanId, setTravelPlanId] = useState(""); // TravelPlanId useState로 관리
@@ -72,9 +79,19 @@ const ScheduleContent = () => {
       const fetchedTravelPlanId = response.data._id;
       setTravelPlanId(fetchedTravelPlanId);
 
-      const dailyPlans = response.data.dailyPlans.filter(
-        (d) => d.dateType === "DATE",
-      );
+      // 서버로부터 받은 전체 응답 데이터를 출력
+      console.log("Server Response:", response);
+
+      const dailyPlans = response.data.dailyPlans
+        .filter((d) => d.dateType === "DATE")
+        .map((plan) => ({
+          ...plan,
+          date: convertToKST(plan.date),
+        }));
+
+      // 변환된 dailyPlans를 출력
+      console.log("Filtered and Converted dailyPlans:", dailyPlans);
+
       setDailyPlans(dailyPlans);
     };
 
