@@ -1,8 +1,11 @@
 import styled from "styled-components";
 import { useState } from "react";
 import KakaoMapModal from "/src/components/commons/modals/KakaoMapModal";
-import dayjs from "dayjs"; // Day.js 라이브러리
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
+
+dayjs.extend(utc);
 dayjs.extend(timezone);
 
 const ModalOverlay = styled.div`

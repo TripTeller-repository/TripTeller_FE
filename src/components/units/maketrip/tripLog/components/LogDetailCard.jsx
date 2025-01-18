@@ -2,7 +2,11 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import LogDetailImg from "/src/components/units/maketrip/tripLog/components/LogDetailImg.jsx";
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
+import "dayjs/locale/ko";
+
+dayjs.extend(utc);
 dayjs.extend(timezone);
 
 const Title = styled.div`
