@@ -58,6 +58,9 @@ const LoginContent = () => {
   //   });
   // };
 
+  console.log("KAKAO_CLIENT_ID", import.meta.env.VITE_KAKAO_CLIENT_ID);
+  console.log("FULL ENV", import.meta.env);
+
   const onClick = () => {
     const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${import.meta.env.VITE_KAKAO_CLIENT_ID}&redirect_uri=${URL}/auth/sign-in/kakao&response_type=code`;
     window.location.href = kakaoAuthUrl;
