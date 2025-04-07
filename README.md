@@ -51,7 +51,7 @@
 
 ## 기술 스택
 
-- react + vite
+- React + vite
 - styled-components
 - recoil
 - ESLint
@@ -62,7 +62,7 @@
 
 ## 폴더 구조
 
-assets / components / layouts / pages 구조
+- assets / components / layouts / pages 구조
 
 ## css 스타일링
 
