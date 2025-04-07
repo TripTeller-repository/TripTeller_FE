@@ -3,6 +3,12 @@ import styled from "styled-components";
 import HeartIcon from "/icon/heart_on.svg";
 import EmptyHeartIcon from "/icon/heart_off.svg";
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+import "dayjs/locale/ko";
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 const CardContainer = styled.div`
   display: flex;
@@ -10,7 +16,7 @@ const CardContainer = styled.div`
   width: 380px;
   height: 350px;
   border-radius: 5px;
-  position: relative;        // 아이콘 사진 안에 배치하기 위해
+  position: relative; // 아이콘 사진 안에 배치하기 위해
 `;
 
 const ImageContainer = styled.div`
@@ -31,7 +37,7 @@ const IconWrapper = styled.img`
   right: 10px;
   width: 40px;
   height: 40px;
-  cursor: pointer; 
+  cursor: pointer;
 `;
 
 const TextContainer = styled.div`
@@ -62,13 +68,16 @@ function ScrabFeedCard({ imageUrl, title, startDate, endDate }) {
   };
 
   const formattedDate = (date) => {
-    return dayjs(date).locale("ko").format("YYYY.MM.DD");
+    return dayjs(date).tz("Asia/Seoul").locale("ko").format("YYYY.MM.DD");
   };
 
   return (
     <CardContainer>
       <ImageContainer>
-        <Image src={imageUrl ? imageUrl : "/img/triplog_default.jpg"} alt="Trip Image" />
+        <Image
+          src={imageUrl ? imageUrl : "/img/triplog_default.jpg"}
+          alt="Trip Image"
+        />
       </ImageContainer>
       <IconWrapper
         src={scrap ? HeartIcon : EmptyHeartIcon} // 하트 아이콘 누르면 빈 하트로 변경
@@ -77,7 +86,9 @@ function ScrabFeedCard({ imageUrl, title, startDate, endDate }) {
       />
       <TextContainer>
         <Title>{title}</Title>
-        <Description>{formattedDate(startDate)} ~ {formattedDate(endDate)}</Description>
+        <Description>
+          {formattedDate(startDate)} ~ {formattedDate(endDate)}
+        </Description>
       </TextContainer>
     </CardContainer>
   );

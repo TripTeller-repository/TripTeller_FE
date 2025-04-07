@@ -2,6 +2,12 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import LogDetailImg from "/src/components/units/maketrip/tripLog/components/LogDetailImg.jsx";
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+import "dayjs/locale/ko";
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 const Title = styled.div`
   display: flex;
@@ -167,7 +173,7 @@ const LogDetailCard = ({
 
   // UTC 시간을 한국 시간 포맷으로 변경
   const formattedTime = (time) => {
-    return dayjs(time).locale("ko").format("A hh:mm");
+    return dayjs(time).tz("Asia/Seoul").locale("ko").format("A hh:mm");
   };
 
   // 텍스트를 입력 시 변경되는 함수
@@ -188,8 +194,8 @@ const LogDetailCard = ({
       <Title>
         <img src="/icon/location.svg" />
         <TitleText>
-        <h4>{memo}</h4>
-        <span>{location}</span>
+          <h4>{memo}</h4>
+          <span>{location}</span>
         </TitleText>
       </Title>
       <Contents>
