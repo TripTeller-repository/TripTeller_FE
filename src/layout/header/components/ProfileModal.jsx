@@ -18,8 +18,8 @@ const ModalContent = styled.div`
   max-width: 500px;
   z-index: 100;
   position: fixed;
-  top: ${({ top }) => top}px;
-  left: ${({ left }) => left}px;
+  top: ${({ $top }) => $top}px;
+  left: ${({ $left }) => $left}px;
 `;
 
 const ProfileContainer = styled.div`
@@ -171,7 +171,7 @@ const ProfileModal = ({ position, closeModal }) => {
   };
 
   return (
-    <ModalContent top={position.top} left={position.left}>
+    <ModalContent $top={position.top} $left={position.left}>
       <ProfileContainer>
         <ProfileImageContainer src={user.profileImage}>
           <AddButton onClick={handleAddPhotoClick} label="Add photo" />

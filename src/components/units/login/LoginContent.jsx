@@ -52,10 +52,15 @@ const Title = styled.div`
   }
 `;
 const LoginContent = () => {
+  // const onClick = () => {
+  //   window.Kakao.Auth.authorize({
+  //     redirectUri: `${URL}/auth/sign-in/kakao`,
+  //   });
+  // };
+
   const onClick = () => {
-    window.Kakao.Auth.authorize({
-      redirectUri: `${URL}/auth/sign-in/kakao`,
-    });
+    const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${import.meta.env.VITE_KAKAO_CLIENT_ID}&redirect_uri=${URL}/auth/sign-in/kakao&response_type=code`;
+    window.location.href = kakaoAuthUrl;
   };
 
   return (
