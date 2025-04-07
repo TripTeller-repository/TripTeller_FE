@@ -38,6 +38,9 @@ jobs:
       - name: install npm dependencies # npm 의존성 설치 단계
         run: npm install # npm을 사용하여 의존성 설치
 
+      - name: Check .env.production
+        run: cat .env.production
+
       - name: react build # React 애플리케이션 빌드 단계
         run: npm run build # npm을 사용하여 빌드 실행
 
