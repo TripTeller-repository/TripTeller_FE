@@ -32,8 +32,8 @@ jobs:
 
       - name: Set up .env.production
         run: |
-          echo "VITE_API_URL=${{ secrets.PROD_API_URL }}" > .env
-          echo "VITE_KAKAO_CLIENT_ID=${{ secrets.KAKAO_CLIENT_ID }}" >> .env
+          echo "VITE_API_URL=${{ secrets.PROD_API_URL }}" > .env.production
+          echo "VITE_KAKAO_CLIENT_ID=${{ secrets.KAKAO_CLIENT_ID }}" >> .env.production
 
       - name: install npm dependencies # npm 의존성 설치 단계
         run: npm install # npm을 사용하여 의존성 설치
