@@ -5,13 +5,15 @@ import styled from "styled-components";
 import Button from "/src/components/commons/buttons/Button";
 import checkIcon from "/icon/complete-message.svg";
 import errorIcon from "/icon/error-message.svg";
-import { useAPI } from '/src/api/API';
+import { useAPI } from "/src/api/API";
+import SuspiciousLoginAlert from "./SuspiciousLoginAlert";
 
 const LoginContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
 `;
+
 const LoginLabel = styled.label`
   display: flex;
   align-items: center;
@@ -35,10 +37,12 @@ const LoginInput = styled.input`
   border: 1px solid var(--main2-color);
   margin-bottom: 16px;
 `;
+
 const NewButton = styled(Button)`
   width: 360px;
   margin-top: 20px;
 `;
+
 const TextContainer = styled.div`
   display: flex;
   justify-content: center;
@@ -46,6 +50,7 @@ const TextContainer = styled.div`
   border-bottom: 1px solid var(--main2-color);
   margin-bottom: 40px;
 `;
+
 const P = styled.p`
   font-family: Pretendard;
   font-size: 12px;
@@ -57,6 +62,7 @@ const P = styled.p`
     cursor: pointer;
   }
 `;
+
 const Icon = styled.img`
   width: 14px;
 `;
@@ -67,6 +73,8 @@ function LoginForm() {
   const [password, setPassword] = useState("");
   const [isEmailValid, setEmailValid] = useState(null);
   const [emailTouched, setEmailTouched] = useState(false);
+  const [showSuspiciousAlert, setShowSuspiciousAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
   const navigate = useNavigate();
   const { request } = useAPI();
 
@@ -79,6 +87,7 @@ function LoginForm() {
     const value = e.target.value;
     setEmailValid(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)); // 이메일 유효성 검사
   };
+
   const handlePasswordChange = (e) => setPassword(e.target.value);
 
   const validate = () => {
@@ -86,29 +95,53 @@ function LoginForm() {
       alert("이메일과 비밀번호를 입력해주세요.");
       return false;
     }
-    return true
-  }
+    return true;
+  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    if (!validate()) return
+    if (!validate()) return;
 
     try {
-      const response = await request('/auth/sign-in', 'POST', { email, password })
+      const response = await request("/auth/sign-in", "POST", {
+        email,
+        password,
+      });
+
       localStorage.setItem("accessToken", response.data.accessToken);
 
       // 유저 정보를 가져와서 전역 상태에 저장
-      fetchCurrentUser()
+      fetchCurrentUser();
 
-      // 홈 화면으로 이동
-      navigate("/");
+      // 의심스러운 로그인 감지 처리
+      if (response.data.suspicious) {
+        setAlertMessage(
+          response.data.message ||
+            "의심스러운 로그인이 감지되었습니다. 본인이 아니라면 비밀번호를 변경해주세요.",
+        );
+        setShowSuspiciousAlert(true);
+      } else {
+        // 의심스러운 로그인이 아니면 바로 홈으로 이동
+        navigate("/");
+      }
     } catch (error) {
       alert(`로그인 요청에 실패했습니다: ${error.message}`);
     }
   };
 
+  const closeAlert = () => {
+    console.log("Alert closing"); // 디버깅용 로그
+    setShowSuspiciousAlert(false);
+    // 알림창을 닫은 후 홈으로 이동
+    navigate("/");
+  };
+
   return (
     <LoginContainer>
+      {showSuspiciousAlert && (
+        <SuspiciousLoginAlert message={alertMessage} onClose={closeAlert} />
+      )}
+
       <LoginLabel
         htmlFor="email"
         $emailTouched={emailTouched}
