@@ -54,15 +54,22 @@ const LoadingIndicator = styled.div`
     aspect-ratio: 1;
     border-radius: 50%;
     padding: 1px;
-    background: conic-gradient(#0000 10%,#f03355) content-box;
-    -webkit-mask:
-      repeating-conic-gradient(#0000 0deg,#000 1deg 20deg,#0000 21deg 36deg),
-      radial-gradient(farthest-side,#0000 calc(100% - var(--b) - 1px),#000 calc(100% - var(--b)));
+    background: conic-gradient(#0000 10%, #f03355) content-box;
+    -webkit-mask: repeating-conic-gradient(
+        #0000 0deg,
+        #000 1deg 20deg,
+        #0000 21deg 36deg
+      ),
+      radial-gradient(
+        farthest-side,
+        #0000 calc(100% - var(--b) - 1px),
+        #000 calc(100% - var(--b))
+      );
     -webkit-mask-composite: destination-in;
-            mask-composite: intersect;
+    mask-composite: intersect;
     animation: l4 1s infinite steps(10);
   }
-  
+
   @keyframes l4 {
     to {
       transform: rotate(1turn);
@@ -82,13 +89,31 @@ const OurTripMainContent = () => {
   const fetchNewData = async () => {
     try {
       const url = `${URL}/our-trip/order-by/recent?pageNumber=${pageNumber}`;
-      const response = await fetch(url, {
+
+      const headers = {
+        "Content-Type": "application/json",
+      };
+
+      if (accessToken) {
+        headers.Authorization = `Bearer ${accessToken}`;
+      }
+
+      let response = await fetch(url, {
         method: "GET",
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          "Content-Type": "application/json",
-        },
+        headers,
       });
+
+      // 401/403 오류시 (토큰 유효하지 않을 경우)
+      if (response.status === 401 || response.status === 403) {
+        // 액세스토큰 제거
+        localStorage.removeItem("accessToken");
+
+        // 인증 없이 다시 요청
+        response = await fetch(url, {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        });
+      }
 
       if (!response.ok) {
         throw new Error("API 요청에 실패했습니다.");
@@ -100,9 +125,11 @@ const OurTripMainContent = () => {
         throw new Error("API 응답이 올바르지 않습니다.");
       }
 
-      setOurTripData(prevData => {
-        const newFeedIds = new Set(data.feeds.data.map(feed => feed.feedId));
-        const filteredData = prevData.filter(feed => !newFeedIds.has(feed.feedId));
+      setOurTripData((prevData) => {
+        const newFeedIds = new Set(data.feeds.data.map((feed) => feed.feedId));
+        const filteredData = prevData.filter(
+          (feed) => !newFeedIds.has(feed.feedId),
+        );
         return [...filteredData, ...data.feeds.data];
       });
 
@@ -124,7 +151,7 @@ const OurTripMainContent = () => {
       threshold: 1.0,
     };
 
-    const observer = new IntersectionObserver(entries => {
+    const observer = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting && hasMore && !loading) {
         setLoading(true);
       }
@@ -144,7 +171,7 @@ const OurTripMainContent = () => {
   useEffect(() => {
     if (loading) {
       fetchNewData();
-      setPageNumber(prevPageNumber => prevPageNumber + 1);
+      setPageNumber((prevPageNumber) => prevPageNumber + 1);
     }
   }, [loading]);
 
