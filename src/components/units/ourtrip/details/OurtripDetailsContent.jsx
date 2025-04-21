@@ -86,7 +86,10 @@ const ButtonList = styled.div`
   }
 `;
 
-// 데이터를 받아서 뿌리는 역할
+// 기본 이미지 경로
+const DEFAULT_COVER_IMAGE = "/img/coverImage_default.jpg";
+
+// 데이터를 받아서 렌더링하는 역할
 function OurtripDetailsContent() {
   const token = localStorage.getItem("accessToken");
 
@@ -194,13 +197,17 @@ function OurtripDetailsContent() {
     }
   };
 
+  // 커버 이미지 url 결정
+  // 현재 변경하는 기능이 없기 때문에 기본 asset 파일로 지정
+  const getCoverImageUrl = () => {
+    return DEFAULT_COVER_IMAGE;
+  };
+
   return (
     <>
       <MaketripBanner
         travelPlanData={feedData.travelPlan}
-        coverImage={
-          feedData.coverImage ? feedData.coverImage : feedData.thumbnailUrl
-        }
+        coverImage={getCoverImageUrl()}
       />
       <Introduce>
         <span>{writerData ? writerData.nickname : "User"}</span>님의
