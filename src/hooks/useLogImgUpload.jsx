@@ -42,15 +42,16 @@ function useLogImgUpload() {
     });
   };
 
-  const fetchSignedUrl = async (fileName) => {
+  const fetchSignedUrl = async (fileName, contentType) => {
     try {
       // useAPI를 사용하여 서명된 URL 요청
       const response = await request(
-        `/daily-schedule/travel-log-image-signed-url/${fileName}`,
+        `/travel-log-image-signed-url/${fileName}?contentType=${contentType}`,
       );
-      const signedUrl = response.data.signedUrl;
+      console.log("=========signed url response:", response);
+      const { uploadUrl, downloadUrl, key } = response.data.signedUrl;
 
-      return signedUrl;
+      return { uploadUrl, downloadUrl, key };
     } catch (error) {
       console.error("Error fetching signed URL:", error);
       return null;
@@ -64,12 +65,19 @@ function useLogImgUpload() {
     }
 
     try {
-      const signedUrl = await fetchSignedUrl(selectedFile.name);
-      if (!signedUrl) throw new Error("Failed to get signed URL");
+      const urls = await fetchSignedUrl(selectedFile.name, resizedFile.type);
+      if (!urls) throw new Error("Failed to get signed URL");
 
-      const uploadResponse = await fetch(signedUrl, {
+      const { uploadUrl, downloadUrl } = urls;
+
+      console.log("==========resizedFile.type", resizedFile.type);
+
+      const uploadResponse = await fetch(uploadUrl, {
         method: "PUT",
         body: resizedFile,
+        headers: {
+          "Content-Type": resizedFile.type,
+        },
       });
 
       if (!uploadResponse.ok) {
@@ -77,12 +85,10 @@ function useLogImgUpload() {
         console.error("Upload failed with status:", uploadResponse.status);
         console.error("Response body:", responseBody);
         throw new Error("Upload failed");
-      } else {
-        // 업로드 성공 후 URL을 상태에 저장
-        const publicUrl = signedUrl.split("?")[0]; // 쿼리 파라미터 제거
-        setUploadedUrl(publicUrl);
-        return publicUrl;
       }
+
+      setUploadedUrl(downloadUrl);
+      return downloadUrl;
     } catch (error) {
       console.error("Error uploading file:", error);
       return null;

@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import TripLogSidebar from "/src/components/commons/sidebar/TripLogSidebar";
 import ScheduleCardList from "/src/components/commons/card/ScheduleCardList";
@@ -91,8 +91,6 @@ const DEFAULT_COVER_IMAGE = "/img/coverImage_default.jpg";
 
 // 데이터를 받아서 렌더링하는 역할
 function OurtripDetailsContent() {
-  const token = localStorage.getItem("accessToken");
-
   // 상태관리
   const [dailyPlanList, setDailyPlanList] = useState([]);
   const [feedData, setFeedData] = useState([]);
@@ -126,6 +124,7 @@ function OurtripDetailsContent() {
           "Content-Type": "application/json",
         },
       });
+
       if (!response.ok) {
         const errorData = await response.json();
         // console.log("errorData", errorData);
@@ -133,10 +132,15 @@ function OurtripDetailsContent() {
           errorData.message || "네트워크 응답이 올바르지 않습니다.",
         );
       }
+
       const data = await response.json();
       // console.log("data", data);
+      const feedInfo = data[0];
+      setFeedData(feedInfo);
 
-      const travelPlanId = data.travelPlanId;
+      const travelPlanId = feedInfo.travelPlanId;
+
+      // travelPlan 상세 정보 가져오기
       const travelPlanResponse = await fetch(
         `${URL}/our-trip/${feedId}/travel-plan/${travelPlanId}`,
         {
@@ -147,13 +151,33 @@ function OurtripDetailsContent() {
         },
       );
 
-      // console.log("travelPlanResponse", travelPlanResponse);
-      setFeedData(data[0]);
-      const dailyPlans = data[0].travelPlan.dailyPlans.filter(
-        (d) => d.dateType === "DATE",
-      );
-      setDailyPlanList(dailyPlans);
-      return data[0];
+      if (!travelPlanResponse.ok) {
+        throw new Error("TravelPlan 데이터 가져오기 실패");
+      }
+
+      const travelPlanData = await travelPlanResponse.json();
+      console.log("TravelPlan 응답 데이터:", travelPlanData);
+
+      const completeFeedData = {
+        ...feedInfo,
+        travelPlan: travelPlanData,
+      };
+
+      setFeedData(completeFeedData);
+
+      // 중요: travelPlanData는 TravelPlan 객체 자체임 (배열이 아님)
+      if (travelPlanData.dailyPlans) {
+        const dailyPlans = travelPlanData.dailyPlans.filter(
+          (d) => d.dateType === "DATE",
+        );
+        setDailyPlanList(dailyPlans);
+        console.log("필터링된 dailyPlans:", dailyPlans);
+      } else {
+        console.warn("dailyPlans를 찾을 수 없습니다.");
+        setDailyPlanList([]);
+      }
+
+      return feedInfo;
     } catch (error) {
       console.error("데이터 전송이 실패하였습니다:", error.message);
     }

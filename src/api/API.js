@@ -1,46 +1,60 @@
 export const URL =
   import.meta.env.VITE_API_URL || `https://api.trip-teller.com`;
 
+import React from "react";
+
 export function useAPI() {
-  const request = async (url, method = "GET", params = undefined) => {
-    try {
+  const request = React.useCallback(
+    async (url, method = "GET", body, opts = {}) => {
+      const {
+        headers: extraHeaders = {},
+        bearerToken = null,
+        noAuth = false,
+        fetchOptions = {},
+      } = opts;
+
       const headers = {
         "Content-Type": "application/json",
+        ...extraHeaders,
       };
 
-      const token = localStorage.getItem("accessToken");
-
-      if (token) {
-        headers.Authorization = `Bearer ${token}`;
+      // Authorization: noAuth → bearerToken → localStorage accessToken
+      if (!noAuth) {
+        const accessToken = localStorage.getItem("accessToken");
+        const tokenToUse = bearerToken ?? accessToken;
+        if (tokenToUse) {
+          headers.Authorization = `Bearer ${tokenToUse}`;
+        }
       }
 
-      const options = {
+      const init = {
         method,
         headers,
-        credentials: "include", // 서버의 쿠키 허용
+        credentials: "include", // httpOnly 쿠키 받기
+        ...fetchOptions,
       };
-      if (params) options.body = JSON.stringify(params);
-      const response = await fetch(`${URL}${url}`, options);
 
-      if (!response.ok) {
-        const errorData = await response.json(); // 에러 응답 데이터 읽기
-        throw new Error(
-          errorData.message || "네트워크 응답이 올바르지 않습니다.",
-        );
+      if (body !== undefined && body !== null) {
+        init.body = JSON.stringify(body);
       }
 
-      const data = await response.json();
-      response.data = data;
+      const res = await fetch(`${URL}${url}`, init);
 
-      return response;
-    } catch (error) {
-      console.error("데이터를 불러오는데 실패했습니다:", error);
+      const contentType = res.headers.get("content-type") || "";
+      const isJson = contentType.toLowerCase().includes("application/json");
+      const data = isJson ? await res.json().catch(() => ({})) : undefined;
 
-      throw error;
-    }
-  };
+      if (!res.ok) {
+        const message =
+          (data && data.message) ||
+          `HTTP ${res.status} ${res.statusText || ""}`.trim();
+        throw new Error(message);
+      }
 
-  return {
-    request,
-  };
+      return { status: res.status, ok: res.ok, data };
+    },
+    [],
+  );
+
+  return { request };
 }

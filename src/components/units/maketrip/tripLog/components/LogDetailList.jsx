@@ -55,24 +55,18 @@ const LogDetailList = ({
 
   const [thumbnailChecked, setThumbnailChecked] = useState(false);
 
+  // useEffect에서는 UI 상태만 설정 (API 호출 X)
   useEffect(() => {
-    // 페이지가 처음 렌더링될 때, coverImage 값과 imageUrl이 일치하는 카드가 있는지 확인
-    const cardWithCoverImage = dailyPlanList.find((dailyPlan) =>
+    // coverImage와 일치하는 이미지가 있는지 확인만 하고 상태 설정
+    const hasMatchingCoverImage = dailyPlanList.some((dailyPlan) =>
       dailyPlan.dailySchedules.some(
         (dailySchedule) => dailySchedule.imageUrl === coverImage,
       ),
     );
 
-    // 해당 카드가 있을 경우 썸네일 상태를 true로 설정
-    if (cardWithCoverImage) {
-      // 해당 카드의 dailyScheduleId와 imageUrl을 가져와서 썸네일 상태 변경 함수 호출
-      handleCheckbox(
-        feedId,
-        cardWithCoverImage._id,
-        cardWithCoverImage.imageUrl,
-      );
-    }
-  }, [coverImage, dailyPlanList, feedId]);
+    // UI 상태만 업데이트 (서버 호출 X)
+    setThumbnailChecked(hasMatchingCoverImage);
+  }, [coverImage, dailyPlanList]);
 
   // 토글 버튼의 상태를 변경하는 함수
   const handleCheckbox = async (feedId, imageUrl) => {

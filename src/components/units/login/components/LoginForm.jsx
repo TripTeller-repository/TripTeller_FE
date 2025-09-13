@@ -6,7 +6,9 @@ import Button from "/src/components/commons/buttons/Button";
 import checkIcon from "/icon/complete-message.svg";
 import errorIcon from "/icon/error-message.svg";
 import { useAPI } from "/src/api/API";
-import SuspiciousLoginAlert from "./SuspiciousLoginAlert";
+import SuspiciousChoiceModal from "./SuspiciousChoiceModal";
+import Setup2FAModal from "./Setup2FAModal";
+import TwoFactorDialog from "./TwoFactorDialog";
 
 const LoginContainer = styled.div`
   display: flex;
@@ -73,8 +75,14 @@ function LoginForm() {
   const [password, setPassword] = useState("");
   const [isEmailValid, setEmailValid] = useState(null);
   const [emailTouched, setEmailTouched] = useState(false);
-  const [showSuspiciousAlert, setShowSuspiciousAlert] = useState(false);
-  const [alertMessage, setAlertMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // 2FA 모달 상태
+  const [suspiciousModal, setSuspiciousModal] = useState(null);
+  const [setup2FAModal, setSetup2FAModal] = useState(null);
+  const [twoFactorModal, setTwoFactorModal] = useState(null);
+  const [tempToken, setTempToken] = useState("");
+
   const navigate = useNavigate();
   const { request } = useAPI();
 
@@ -85,7 +93,7 @@ function LoginForm() {
 
   const handleEmailValidation = (e) => {
     const value = e.target.value;
-    setEmailValid(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)); // 이메일 유효성 검사
+    setEmailValid(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value));
   };
 
   const handlePasswordChange = (e) => setPassword(e.target.value);
@@ -103,45 +111,136 @@ function LoginForm() {
     if (!validate()) return;
 
     try {
+      setIsSubmitting(true);
+
       const response = await request("/auth/sign-in", "POST", {
         email,
         password,
       });
 
-      localStorage.setItem("accessToken", response.data.accessToken);
+      const data = response.data;
+      console.log("Login response:", data); // 디버깅용
 
-      // 유저 정보를 가져와서 전역 상태에 저장
-      fetchCurrentUser();
+      setTempToken(data.tempToken);
 
-      // 의심스러운 로그인 감지 처리
-      if (response.data.suspicious) {
-        setAlertMessage(
-          response.data.message ||
-            "의심스러운 로그인이 감지되었습니다. 본인이 아니라면 비밀번호를 변경해주세요.",
-        );
-        setShowSuspiciousAlert(true);
-      } else {
-        // 의심스러운 로그인이 아니면 바로 홈으로 이동
+      // 케이스 1: 정상 로그인 완료 (2FA도 의심스러운 로그인도 없음)
+      if (data.accessToken) {
+        localStorage.setItem("accessToken", data.accessToken);
+        fetchCurrentUser();
         navigate("/");
+        return;
+      }
+
+      // 케이스 2: 의심스러운 로그인 감지
+      if (data.isSuspiciousLogin) {
+        setSuspiciousModal({
+          message: data.message || "의심스러운 로그인이 감지되었습니다.",
+          suspiciousFactors: data.suspiciousFactors || [],
+          tempToken: data.tempToken,
+          userHas2FA: data.userHas2FA,
+        });
+        return;
+      }
+
+      // 케이스 3: 정상 로그인이지만 tempToken만 반환된 경우 - 바로 proceed
+      if (!data.isSuspiciousLogin && data.tempToken) {
+        try {
+          const proceedResponse = await request(
+            "/auth/sign-in/proceed",
+            "POST",
+            {
+              tempToken: data.tempToken,
+            },
+          );
+
+          if (proceedResponse.data.accessToken) {
+            localStorage.setItem(
+              "accessToken",
+              proceedResponse.data.accessToken,
+            );
+            fetchCurrentUser();
+            navigate("/");
+            return;
+          }
+        } catch (proceedError) {
+          console.error("Proceed login failed:", proceedError);
+          alert(`로그인 진행에 실패했습니다: ${proceedError.message}`);
+          return;
+        }
       }
     } catch (error) {
+      console.error("Login error:", error);
       alert(`로그인 요청에 실패했습니다: ${error.message}`);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
-  const closeAlert = () => {
-    console.log("Alert closing"); // 디버깅용 로그
-    setShowSuspiciousAlert(false);
-    // 알림창을 닫은 후 홈으로 이동
-    navigate("/");
+  // 의심스러운 로그인 - 일반 로그인 선택
+  const handleNormalLogin = async () => {
+    try {
+      const response = await request("/auth/sign-in/proceed", "POST", {
+        tempToken: suspiciousModal.tempToken,
+      });
+
+      if (response.data.accessToken) {
+        localStorage.setItem("accessToken", response.data.accessToken);
+        fetchCurrentUser();
+        setSuspiciousModal(null);
+        navigate("/");
+      }
+    } catch (error) {
+      alert(`로그인 진행에 실패했습니다: ${error.message}`);
+      setSuspiciousModal(null);
+    }
+  };
+
+  // 의심스러운 로그인 - 2FA 선택
+  const handleChoose2FA = () => {
+    if (suspiciousModal.userHas2FA) {
+      // 이미 2FA 설정된 경우 - 바로 인증
+      setTwoFactorModal({
+        tempToken: suspiciousModal.tempToken,
+        allowSkip: true, // 의심스러운 로그인에서는 건너뛰기 허용
+      });
+    } else {
+      // 2FA 미설정 - 설정 진행
+      setSetup2FAModal({
+        tempToken: suspiciousModal.tempToken,
+      });
+    }
+    setSuspiciousModal(null);
+  };
+
+  // 2FA 설정 완료 후
+  const handle2FASetupDone = () => {
+    setSetup2FAModal(null);
+    // 설정 완료 후 바로 2FA 인증 진행
+    setTwoFactorModal({
+      tempToken: tempToken,
+    });
+  };
+
+  // 2FA 인증 성공
+  const handle2FASuccess = (data) => {
+    if (data.accessToken) {
+      localStorage.setItem("accessToken", data.accessToken);
+      fetchCurrentUser();
+      setTwoFactorModal(null);
+      navigate("/");
+    }
+  };
+
+  // 모달 닫기
+  const closeAllModals = () => {
+    setSuspiciousModal(null);
+    setSetup2FAModal(null);
+    setTwoFactorModal(null);
+    setTempToken("");
   };
 
   return (
     <LoginContainer>
-      {showSuspiciousAlert && (
-        <SuspiciousLoginAlert message={alertMessage} onClose={closeAlert} />
-      )}
-
       <LoginLabel
         htmlFor="email"
         $emailTouched={emailTouched}
@@ -168,6 +267,7 @@ function LoginForm() {
         onChange={handleEmailChange}
         onBlur={handleEmailValidation}
         id="email"
+        disabled={isSubmitting}
       />
 
       <LoginLabel>비밀번호</LoginLabel>
@@ -177,12 +277,13 @@ function LoginForm() {
         value={password}
         onChange={handlePasswordChange}
         id="password"
+        disabled={isSubmitting}
       />
       <NewButton
         onClick={handleLogin}
-        disabled={!email || !password || !isEmailValid}
+        disabled={!email || !password || !isEmailValid || isSubmitting}
       >
-        로그인
+        {isSubmitting ? "로그인 중..." : "로그인"}
       </NewButton>
       <TextContainer>
         <P>
@@ -190,6 +291,37 @@ function LoginForm() {
           <span onClick={() => navigate("/signup")}> 회원가입</span> 하기
         </P>
       </TextContainer>
+
+      {/* 의심스러운 로그인 선택 모달 */}
+      {suspiciousModal && (
+        <SuspiciousChoiceModal
+          message={suspiciousModal.message}
+          suspiciousFactors={suspiciousModal.suspiciousFactors}
+          userHas2FA={suspiciousModal.userHas2FA}
+          onChooseNormal={handleNormalLogin}
+          onChoose2FA={handleChoose2FA}
+          onClose={closeAllModals}
+        />
+      )}
+
+      {/* 2FA 설정 모달 */}
+      {setup2FAModal && (
+        <Setup2FAModal
+          tempToken={setup2FAModal.tempToken}
+          onSetupDone={handle2FASetupDone}
+          onCancel={closeAllModals}
+        />
+      )}
+
+      {/* 2FA 인증 모달 */}
+      {twoFactorModal && (
+        <TwoFactorDialog
+          tempToken={twoFactorModal.tempToken}
+          allowSkip={twoFactorModal.allowSkip}
+          onSuccess={handle2FASuccess}
+          onCancel={closeAllModals}
+        />
+      )}
     </LoginContainer>
   );
 }
